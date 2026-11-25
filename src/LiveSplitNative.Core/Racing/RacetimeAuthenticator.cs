@@ -71,16 +71,54 @@ public sealed class RacetimeAuthenticator(HttpMessageHandler handler, ICredentia
 
     public static string RedirectUri => $"http://{RedirectAddress}:{RedirectPort}/";
 
+    // The saved sign-in is read from the credential store (macOS: the Keychain, which may ask the
+    // user each time) once, the first time it is needed, and kept in memory after that.
+    private string? _accessToken;
+    private bool _accessTokenRead;
+    private string? _refreshToken;
+    private bool _refreshTokenRead;
+
     public string? AccessToken
     {
-        get => credentials.Read(AccessTokenName);
-        set => credentials.Write(AccessTokenName, value);
+        get
+        {
+            if (!_accessTokenRead)
+            {
+                _accessToken = credentials.Read(AccessTokenName);
+                _accessTokenRead = true;
+            }
+
+            return _accessToken;
+        }
+        set
+        {
+            _accessToken = value;
+            _accessTokenRead = true;
+            credentials.Write(AccessTokenName, value);
+        }
     }
+
+    /// <summary>The access token only when it was already read this session (never reads the store).</summary>
+    public string? AccessTokenIfRead => _accessTokenRead ? _accessToken : null;
 
     public string? RefreshToken
     {
-        get => credentials.Read(RefreshTokenName);
-        set => credentials.Write(RefreshTokenName, value);
+        get
+        {
+            if (!_refreshTokenRead)
+            {
+                _refreshToken = credentials.Read(RefreshTokenName);
+                _refreshTokenRead = true;
+            }
+
+            return _refreshToken;
+        }
+        set
+        {
+            _refreshToken = value;
+            _refreshTokenRead = true;
+            credentials.Write(RefreshTokenName, value);
+        }
     }
 
     public RacetimeIdentity? Identity { get; private set; }

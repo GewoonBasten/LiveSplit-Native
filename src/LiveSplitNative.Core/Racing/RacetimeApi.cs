@@ -4,8 +4,8 @@ using LiveSplitNative.Core.Formatting;
 namespace LiveSplitNative.Core.Racing;
 
 /// <summary>
-/// LiveSplit.Racetime RacetimeAPI: the races racetime.gg lists (races/data, with the signed-in
-/// account's token) for the "racetime.gg Races" menu.
+/// LiveSplit.Racetime RacetimeAPI: the races racetime.gg lists (races/data; with the signed-in
+/// account's token once a race was opened) for the "racetime.gg Races" menu.
 /// </summary>
 public sealed class RacetimeApi(HttpMessageHandler handler, RacetimeAuthenticator authenticator)
 {
@@ -30,7 +30,14 @@ public sealed class RacetimeApi(HttpMessageHandler handler, RacetimeAuthenticato
         try
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, BaseUri + RacesEndpoint);
-            request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + Authenticator.AccessToken);
+            // racetime.gg lists open races without a sign-in. The saved sign-in is only sent once a
+            // race was opened this session, so listing races never reads the Keychain (Windows
+            // always sends it).
+            if (Authenticator.AccessTokenIfRead is { } token)
+            {
+                request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + token);
+            }
+
             using HttpResponseMessage response = await _http.SendAsync(request);
             response.EnsureSuccessStatusCode();
             using JsonDocument json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());

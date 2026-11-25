@@ -288,19 +288,49 @@ public sealed class RacetimeTests
         Assert.False(race.Entrants[0].HasFinished);
     }
 
+    /// <summary>Counts reads of the saved sign-in (on macOS each read can show a Keychain prompt).</summary>
+    private sealed class CountingCredentialStore : ICredentialStore
+    {
+        private readonly MemoryCredentialStore _inner = new();
+
+        public int Reads { get; private set; }
+
+        public string? Read(string name)
+        {
+            Reads++;
+            return _inner.Read(name);
+        }
+
+        public void Write(string name, string? value) => _inner.Write(name, value);
+    }
+
+    /// <summary>
+    /// The races list never reads the saved sign-in (Basten 25 Nov: racetime access was asked
+    /// again and again; only opening a race should ask). Once a race was opened, it is sent.
+    /// </summary>
     [Fact]
-    public async Task RacesListReadsRacesDataWithTheToken()
+    public async Task RacesListReadsRacesDataWithoutTheKeychainUntilARaceIsOpened()
     {
         var handler = new FakeRacetime
         {
             RacesJson = "{\"races\":[" + JsonDocument.Parse(RaceData(1, "open", "ready")).RootElement.GetProperty("race").GetRawText() + "]}",
         };
-        var credentials = new MemoryCredentialStore();
+        var credentials = new CountingCredentialStore();
         credentials.Write(RacetimeAuthenticator.AccessTokenName, "tok");
-        var api = new RacetimeApi(handler, new RacetimeAuthenticator(handler, credentials, _ => { }));
+        var authenticator = new RacetimeAuthenticator(handler, credentials, _ => { });
+        var api = new RacetimeApi(handler, authenticator);
         IReadOnlyList<RacetimeRace> races = await api.RefreshRacesAsync();
+        await api.RefreshRacesAsync();
         RacetimeRace race = Assert.Single(races);
         Assert.Empty(race.Entrants);
+        Assert.Equal(0, credentials.Reads);
+        Assert.Contains("GET https://racetime.gg/races/data ", handler.Requests);
+
+        // Opening a race signs in: the saved sign-in is read once and then sent with the list.
+        Assert.Equal(AuthResult.Success, await authenticator.AuthorizeAsync());
+        Assert.Equal(AuthResult.Success, await authenticator.AuthorizeAsync());
+        Assert.Equal(1, credentials.Reads);
+        await api.RefreshRacesAsync();
         Assert.Contains("GET https://racetime.gg/races/data Bearer tok", handler.Requests);
 
         // A failed refresh keeps the list.
