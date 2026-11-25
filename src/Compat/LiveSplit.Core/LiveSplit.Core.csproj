@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>LiveSplit.Core</AssemblyName>
+    <RootNamespace>LiveSplit</RootNamespace>
+    <AssemblyVersion>99.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="LiveSplit.Subsplits" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\System.Drawing\System.Drawing.csproj" />
+    <ProjectReference Include="..\System.Windows.Forms\System.Windows.Forms.csproj" />
+    <ProjectReference Include="..\UpdateManager\UpdateManager.csproj" />
+    <ProjectReference Include="..\..\LiveSplitNative.ComponentHost\LiveSplitNative.ComponentHost.csproj" Private="false" />
+    <ProjectReference Include="..\..\LiveSplitNative.Core\LiveSplitNative.Core.csproj" Private="false" />
+  </ItemGroup>
+</Project>

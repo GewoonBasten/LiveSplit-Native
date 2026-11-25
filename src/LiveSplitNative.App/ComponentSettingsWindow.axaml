@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LiveSplitNative.App.ComponentSettingsWindow"
+        Title="Component Settings"
+        Width="600"
+        MinWidth="520"
+        MinHeight="220"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif">
+  <!--
+    Sized dialog: fields scroll inside HostScroll when taller than MaxHeight (~720 /
+    85% screen). OK/Cancel stay docked — Windows-like content scroll, not off-screen window.
+  -->
+  <DockPanel>
+    <Border x:Name="Footer" DockPanel.Dock="Bottom" Classes="dialogFooter">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+        <Button Classes="dialog" Content="Cancel" IsCancel="True" MinWidth="75" Click="OnCancel"/>
+        <Button Classes="dialog primary" Content="OK" IsDefault="True" MinWidth="75" Click="OnOk"/>
+      </StackPanel>
+    </Border>
+    <ScrollViewer x:Name="HostScroll"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+      <ContentControl x:Name="Host"/>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

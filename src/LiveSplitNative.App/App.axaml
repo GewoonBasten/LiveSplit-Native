@@ -1,0 +1,30 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="LiveSplitNative.App.App"
+             Name="LiveSplit"
+             RequestedThemeVariant="Default">
+  <!-- macOS's app menu: "About LiveSplit" (Avalonia's own menu otherwise offers "About Avalonia");
+       Hide / Quit take the Name above. -->
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <NativeMenuItem Header="About LiveSplit" Click="OnAboutClick"/>
+    </NativeMenu>
+  </NativeMenu.Menu>
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://LiveSplitNative.App/Themes/DialogThemeBrushes.axaml"/>
+        <ResourceInclude Source="avares://LiveSplitNative.App/Themes/WinFormsControls.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+      <!-- Bundled Paneuropean Bold first (Windows FontStyle.Bold) — host CG often resolves Regular-only -->
+      <FontFamily x:Key="LiveSplitTimerFont">fonts:Inter#Inter, sans-serif</FontFamily>
+    </ResourceDictionary>
+  </Application.Resources>
+  <Application.Styles>
+    <!-- Compact reduces Fluent control metrics; DialogStyles still force TabItem ≤12pt -->
+    <FluentTheme DensityStyle="Compact"/>
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+    <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml"/>
+    <StyleInclude Source="avares://LiveSplitNative.App/Themes/DialogStyles.axaml"/>
+  </Application.Styles>
+</Application>

@@ -1,0 +1,213 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LiveSplitNative.App"
+        x:Class="LiveSplitNative.App.SplitsEditorWindow"
+        Title="Splits Editor"
+        Width="920" Height="540"
+        MinWidth="684" MinHeight="531"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        SizeToContent="Manual"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif">
+  <Window.Resources>
+    <!-- The grids never sort (Windows RunEditor: SortMode NotSortable), so the Fluent header's
+         sort-glyph column (MinWidth 32) is only dead space; in the 50-wide Icon column it left
+         2 px for the header text, which showed as a bar. -->
+    <x:Double x:Key="DataGridSortIconMinWidth">0</x:Double>
+  </Window.Resources>
+  <Window.Styles>
+    <!-- The fields inside the Game Name / Run Category boxes look like the other 22 px fields. -->
+    <Style Selector="AutoCompleteBox.runEditorField /template/ TextBox#PART_TextBox">
+      <Setter Property="MinHeight" Value="22"/>
+      <Setter Property="Height" Value="22"/>
+    </Style>
+  </Window.Styles>
+  <!-- Toward WinForms RunEditorDialog: icon + metadata, left rail, Real Time / Game Time / Additional Info.
+       Minimum size: RunEditorDialog's MinimumSize 700 x 510 less its frame (client 684 x 471), so
+       the whole left rail always shows. -->
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Classes="dialogFooter">
+      <StackPanel x:Name="FooterPanel" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+        <Button Classes="dialog" Content="Cancel" IsCancel="True" Click="OnCancel"/>
+        <Button Classes="dialog primary" Content="OK" IsDefault="True" Click="OnOk"/>
+      </StackPanel>
+    </Border>
+    <!-- Hidden when empty — an always-on StatusLabel was reserving a blank strip above OK/Cancel -->
+    <TextBlock x:Name="StatusLabel" DockPanel.Dock="Bottom" Foreground="{DynamicResource LsDialogErrorForeground}" Margin="16,0,16,6"
+               Text="" IsVisible="False"/>
+
+    <!-- Windows RunEditor column0 = 140; picGameIcon + side buttons share left edge (margin 10,
+         width 120). 128 here: "Import Comparison..." is 118 px wide in SF Pro Text and was cut. -->
+    <Grid ColumnDefinitions="148,*" RowDefinitions="Auto,*" Margin="14,10,24,12">
+      <!-- Game icon: empty box or image only (Windows picGameIcon — no caption text) -->
+      <Border x:Name="GameIconBorder" Width="128" Height="128" Margin="10,10,10,10"
+              HorizontalAlignment="Left" VerticalAlignment="Top"
+              BorderBrush="{DynamicResource LsDialogCardBorderBrush}" BorderThickness="1" CornerRadius="8"
+              Background="{DynamicResource LsDialogCardBackground}" ClipToBounds="True" Cursor="Hand"
+              ToolTip.Tip="Double-click to set game icon">
+        <Image x:Name="GameIconImage" Stretch="Uniform" Margin="4"/>
+      </Border>
+
+      <!-- Metadata, in a card (the settings look) -->
+      <Border Grid.Column="1" Margin="4,10,0,12" VerticalAlignment="Top" Padding="14,10,14,4" CornerRadius="8" BorderThickness="1"
+              Background="{DynamicResource LsDialogCardBackground}" BorderBrush="{DynamicResource LsDialogCardBorderBrush}">
+      <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+        <TextBlock Text="Game Name:" VerticalAlignment="Center" Margin="0,0,8,6"/>
+        <!-- RunEditorDialog cbxGameName (CustomAutoCompleteComboBox): up to ten speedrun.com games
+             under the field as you type; cbxRunCategory: the game's categories, completed as you
+             type (SuggestAppend) and listed by the arrow. -->
+        <AutoCompleteBox x:Name="GameNameBox" Classes="runEditorField" Grid.Column="1" Margin="0,0,0,6" Height="22"
+                         FilterMode="None" MinimumPrefixLength="1" MinimumPopulateDelay="0:0:0.05" MaxDropDownHeight="220"/>
+        <TextBlock Grid.Row="1" Text="Run Category:" VerticalAlignment="Center" Margin="0,0,8,6"/>
+        <Grid x:Name="CategoryField" Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+          <AutoCompleteBox x:Name="CategoryBox" Classes="runEditorField" Height="22"
+                           FilterMode="StartsWith" IsTextCompletionEnabled="True" MinimumPrefixLength="1" MaxDropDownHeight="220"/>
+          <Button x:Name="CategoryListButton" Grid.Column="1" Width="22" Height="22" Margin="2,0,0,0" Padding="0"
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Focusable="False"
+                  ToolTip.Tip="Categories">
+            <Path Data="M 0 0 L 8 0 L 4 4.5 Z" Fill="{DynamicResource LsDialogForeground}" Width="8" Height="4.5" Stretch="Fill"/>
+          </Button>
+          <!-- The arrow's list: every category, under the box like the suggestions. -->
+          <Popup x:Name="CategoryListPopup" PlacementTarget="{Binding #CategoryField}" Placement="BottomEdgeAlignedLeft"
+                 IsLightDismissEnabled="True">
+            <Border Background="{DynamicResource AutoCompleteBoxSuggestionsListBackground}"
+                    BorderBrush="{DynamicResource AutoCompleteBoxSuggestionsListBorderBrush}"
+                    BorderThickness="{DynamicResource AutoCompleteListBorderThemeThickness}"
+                    CornerRadius="{DynamicResource OverlayCornerRadius}"
+                    Padding="{DynamicResource AutoCompleteListPadding}">
+              <ListBox x:Name="CategoryList" Background="Transparent" BorderThickness="0" MaxHeight="220"
+                       Margin="{DynamicResource AutoCompleteListMargin}"/>
+            </Border>
+          </Popup>
+        </Grid>
+        <TextBlock Grid.Row="2" Text="Start Timer at:" VerticalAlignment="Center" Margin="0,0,8,6"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,6">
+          <TextBox x:Name="OffsetBox" Width="100" Height="22" Watermark="0.000"/>
+          <TextBlock Text="Attempts:" VerticalAlignment="Center"/>
+          <TextBox x:Name="AttemptsBox" Width="70" Height="22"/>
+        </StackPanel>
+        <!-- RunEditorDialog chkbxUseLayout + cbxLayoutToUse + btnBrowseLayout: opening these
+             splits opens this layout too (Default Layout or one of the recent ones). -->
+        <CheckBox x:Name="UseLayoutBox" Grid.Row="3" Content="Use Layout" Margin="0,0,8,6"
+                  IsCheckedChanged="OnUseLayoutChanged"/>
+        <StackPanel x:Name="LayoutSelectPanel" Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
+          <ComboBox x:Name="LayoutToUseBox" Classes="settingsCombo" Width="200" Height="22" MinHeight="22"
+                    SelectionChanged="OnLayoutToUseChanged"/>
+          <Button Classes="dialog" Content="Browse" Click="OnBrowseLayout"/>
+        </StackPanel>
+      </Grid>
+      </Border>
+
+      <!-- Left rail: same left edge + width as game icon; never overlap the segment grid. -->
+      <StackPanel Grid.Row="1" Width="128" Spacing="6" Margin="10,0,10,0"
+                  HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Button x:Name="BtnInsert" Classes="dialogSide" Content="Insert Above" Click="OnInsert"/>
+        <Button x:Name="BtnAdd" Classes="dialogSide" Content="Insert Below" Click="OnAdd"/>
+        <Button x:Name="BtnRemove" Classes="dialogSide" Content="Remove Segment" Click="OnRemove"/>
+        <Button x:Name="BtnMoveUp" Classes="dialogSide" Content="Move Up" Click="OnMoveUp"/>
+        <Button x:Name="BtnMoveDown" Classes="dialogSide" Content="Move Down" Click="OnMoveDown"/>
+        <Button x:Name="BtnAddComparison" Classes="dialogSide" Content="Add Comparison" Click="OnAddComparison"/>
+        <Button x:Name="BtnImportComparison" Classes="dialogSide" Content="Import Comparison..." Click="OnImportComparison"/>
+        <Button Classes="dialogSide" Content="Clear Icon" Click="OnClearIcon"/>
+        <!-- RunEditorDialog btnOther: Clear History, Clear Times, Clean Sum of Best. -->
+        <Button x:Name="BtnOther" Classes="dialogSide" Content="Other..." Click="OnOther"/>
+      </StackPanel>
+
+      <!-- Tabs: Real Time / Game Time / Additional Info — FontSize forced in DialogStyles -->
+      <local:DialogTabControl x:Name="EditorTabs" Classes="segmentedTabs" Grid.Row="1" Grid.Column="1"
+                              Margin="4,0,0,0" FontSize="12" FillsHeight="True">
+        <!-- TextBlock headers: Fluent TabItem string headers ignore FontSize setters -->
+        <TabItem FontSize="12">
+          <TabItem.Header>
+            <TextBlock Text="Real Time" FontSize="12" FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+          </TabItem.Header>
+          <!-- The DataGrid owns the bounded viewport. Its extent may be thousands of
+               pixels, but the tab never grows behind the fixed footer. -->
+          <Grid Margin="0,10,0,0" RowDefinitions="*">
+            <DataGrid x:Name="SegmentsGrid"
+                      x:DataType="local:SegmentEditRow"
+                      AutoGenerateColumns="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      IsReadOnly="False"
+                      SelectionMode="Extended"
+                      ClipboardCopyMode="ExcludeHeader"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      RowHeight="30"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+          </Grid>
+        </TabItem>
+        <TabItem FontSize="12">
+          <TabItem.Header>
+            <TextBlock Text="Game Time" FontSize="12" FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+          </TabItem.Header>
+          <!-- Independent GT grid — same rows/model as Real Time; times are GameTime only. -->
+          <Grid Margin="0,10,0,0" RowDefinitions="*">
+            <DataGrid x:Name="GameTimeSegmentsGrid"
+                      x:DataType="local:SegmentEditRow"
+                      AutoGenerateColumns="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      IsReadOnly="False"
+                      SelectionMode="Extended"
+                      ClipboardCopyMode="ExcludeHeader"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      RowHeight="30"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+          </Grid>
+        </TabItem>
+        <TabItem FontSize="12">
+          <TabItem.Header>
+            <TextBlock Text="Additional Info" FontSize="12" FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+          </TabItem.Header>
+          <!-- MetadataControl: the category's rules, the game's platforms and regions, the
+               emulator, the variables (filled in from speedrun.com), Submit Run... and
+               Associate with / Show on Speedrun.com.... -->
+          <!-- The buttons stay along the bottom, as in MetadataControl's last row. -->
+          <DockPanel Margin="0,14,0,0">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+              <Button x:Name="SubmitRunButton" Classes="dialog" Content="Submit Run..." Click="OnSubmitRun"/>
+              <Button x:Name="AssociateButton" Classes="dialog" Content="Associate with Speedrun.com..." Click="OnAssociate"/>
+            </StackPanel>
+            <ScrollViewer>
+              <StackPanel x:Name="MetadataPanel" Spacing="14" MaxWidth="560" HorizontalAlignment="Left">
+                <local:SettingsSection Header="Rules">
+                  <Border x:Name="RulesBorder" Height="100" CornerRadius="8" BorderThickness="1"
+                          Background="{DynamicResource LsDialogCardBackground}" BorderBrush="{DynamicResource LsDialogCardBorderBrush}">
+                    <ScrollViewer x:Name="RulesScroll" HorizontalScrollBarVisibility="Disabled">
+                      <SelectableTextBlock x:Name="RulesText" TextWrapping="Wrap" Margin="12,8,12,8"/>
+                    </ScrollViewer>
+                  </Border>
+                </local:SettingsSection>
+                <local:SettingsCard x:Name="MetadataCard" local:SettingsLayout.LabelWidth="150">
+                  <local:SettingsField Label="Platform:">
+                    <ComboBox x:Name="PlatformBox" Classes="settingsCombo" Width="260"/>
+                  </local:SettingsField>
+                  <local:SettingsField Label="Region:">
+                    <ComboBox x:Name="RegionBox" Classes="settingsCombo" Width="260"/>
+                  </local:SettingsField>
+                  <CheckBox x:Name="EmulatorBox" Content="Uses Emulator"/>
+                </local:SettingsCard>
+                <local:SettingsSection Header="Attempt History">
+                  <ListBox x:Name="AttemptHistoryList" Height="140"/>
+                  <Button Classes="dialog" Content="Delete Selected Attempt" HorizontalAlignment="Left" Click="OnDeleteAttempt"/>
+                </local:SettingsSection>
+              </StackPanel>
+            </ScrollViewer>
+          </DockPanel>
+        </TabItem>
+      </local:DialogTabControl>
+    </Grid>
+  </DockPanel>
+</Window>

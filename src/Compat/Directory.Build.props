@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    Look-alikes of the Windows assemblies third-party LiveSplit components bind to
+    (System.Drawing, System.Windows.Forms, LiveSplit.Core, UpdateManager). They keep Windows'
+    assembly names, namespaces and member signatures so a component DLL loads unchanged; the app
+    loads them into the components' own AssemblyLoadContext (ComponentHost CompatComponentLoader),
+    never into its own.
+  -->
+  <Import Project="..\..\Directory.Build.props" />
+  <PropertyGroup>
+    <Nullable>disable</Nullable>
+    <NoWarn>$(NoWarn);CS0067;CS0108;CS0114;CA1416</NoWarn>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>

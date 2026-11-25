@@ -1,0 +1,9 @@
+<Project>
+  <Import Project="..\..\Directory.Build.targets" Condition="Exists('..\..\Directory.Build.targets')" />
+  <!-- The framework's own System.Drawing facade would clash with the look-alike of that name. -->
+  <Target Name="LsnRemoveFrameworkSystemDrawing" AfterTargets="ResolveTargetingPackAssets">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Reference.Filename)' == 'System.Drawing'" />
+    </ItemGroup>
+  </Target>
+</Project>

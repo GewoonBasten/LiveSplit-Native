@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace>LiveSplitNative.App</RootNamespace>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!-- The global keyboard hook's event tap callback is an unmanaged function pointer. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5" />
+    <!-- Screenshot / agent sessions: Native RenderTimer can fail (-6661); headless Skia fallback. -->
+    <PackageReference Include="Avalonia.Skia" Version="11.2.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="LiveSplitNative.App.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LiveSplitNative.Core\LiveSplitNative.Core.csproj" />
+    <ProjectReference Include="..\LiveSplitNative.ComponentHost\LiveSplitNative.ComponentHost.csproj" />
+  </ItemGroup>
+  <!-- The Auto Splitting Runtime's native library (native/README.md), when it was built. -->
+  <ItemGroup Condition="Exists('..\..\native\osx-arm64\libasr_capi.dylib') And ('$(RuntimeIdentifier)' == '' Or $(RuntimeIdentifier.StartsWith('osx')))">
+    <None Include="..\..\native\osx-arm64\libasr_capi.dylib" Link="libasr_capi.dylib" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\tests\fixtures\icons\*.png" Link="fixtures\icons\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <!-- No bundled fonts of our own: the timer's default is Inter (Avalonia.Fonts.Inter, SIL OFL). -->
+  <Import Project="..\Compat\CopyCompat.targets" />
+</Project>

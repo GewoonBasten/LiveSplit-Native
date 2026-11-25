@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LiveSplitNative.App/LiveSplitNative.App.csproj" />
+    <Project Path="src/LiveSplitNative.ComponentHost/LiveSplitNative.ComponentHost.csproj" />
+    <Project Path="src/LiveSplitNative.Core/LiveSplitNative.Core.csproj" />
+  </Folder>
+  <Folder Name="/src/Compat/">
+    <Project Path="src/Compat/LiveSplit.Core/LiveSplit.Core.csproj" />
+    <Project Path="src/Compat/LiveSplit.Subsplits/LiveSplit.Subsplits.csproj" />
+    <Project Path="src/Compat/System.Drawing/System.Drawing.csproj" />
+    <Project Path="src/Compat/System.Windows.Forms/System.Windows.Forms.csproj" />
+    <Project Path="src/Compat/UpdateManager/UpdateManager.csproj" />
+    <Project Path="src/Compat/WinFormsColor/WinFormsColor.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LiveSplitNative.App.Tests/LiveSplitNative.App.Tests.csproj" />
+    <Project Path="tests/LiveSplitNative.Core.Tests/LiveSplitNative.Core.Tests.csproj" />
+    <Project Path="tests/LiveSplitNative.Upstream.Tests/LiveSplitNative.Upstream.Tests.csproj" />
+  </Folder>
+</Solution>

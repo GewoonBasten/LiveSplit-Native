@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LiveSplitNative.App"
+        x:Class="LiveSplitNative.App.SettingsWindow"
+        Title="Settings"
+        Width="600"
+        MinWidth="560"
+        MinHeight="260"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"
+        local:SettingsLayout.LabelWidth="212">
+  <!--
+    Upstream SettingsDialog is a single form; we keep its Hotkeys / General / Racing / Server parts
+    as tabs. The settings look (Basten, 27 Oct sketch): segmented tabs, cards with their heading
+    above, one label column for every tab, OK on the right in the accent color.
+  -->
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Classes="dialogFooter">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+        <Button Classes="dialog" Content="Cancel" IsCancel="True" Click="OnCancel"/>
+        <Button Classes="dialog primary" Content="OK" IsDefault="True" Click="OnOk"/>
+      </StackPanel>
+    </Border>
+
+    <TabControl x:Name="SettingsTabs" Classes="segmentedTabs" Margin="24,20,24,20">
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock Text="Hotkeys"/>
+        </TabItem.Header>
+        <StackPanel Spacing="22">
+          <local:SettingsSection Header="Hotkeys">
+            <local:SettingsCard x:Name="HotkeyBindingsCard"/>
+          </local:SettingsSection>
+
+          <local:SettingsCard>
+            <CheckBox x:Name="GlobalHotkeysBox" Content="Global Hotkeys"
+                      IsCheckedChanged="OnGlobalHotkeysChanged"/>
+            <CheckBox x:Name="DeactivateForOtherProgramsBox" local:SettingsCard.Indent="1"
+                      Content="Deactivate For Other Programs"/>
+            <CheckBox x:Name="DoubleTapPreventionBox" Content="Double Tap Prevention"/>
+            <local:SettingsField Label="Hotkey Delay (Seconds):">
+              <NumericUpDown x:Name="HotkeyDelayBox" Classes="settingsNumeric" Width="104" MinWidth="104" MaxWidth="104"
+                             Minimum="0" Maximum="60" Increment="0.1" FormatString="0.0"
+                             VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
+                             Height="26" MinHeight="26" Padding="8,0,6,0"/>
+            </local:SettingsField>
+            <CheckBox x:Name="AllowGamepadsBox" Content="Allow Gamepads as Hotkeys"/>
+            <CheckBox x:Name="EnableDpiBox" Content="Enable DPI Aware" IsEnabled="False"/>
+          </local:SettingsCard>
+
+          <local:SettingsSection Header="Hotkey Profiles">
+            <local:SettingsCard>
+              <local:SettingsField Label="Active Hotkey Profile:">
+                <ComboBox x:Name="HotkeyProfileBox" Classes="settingsCombo" Width="200"/>
+              </local:SettingsField>
+              <local:SettingsField>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Button Classes="dialog" Content="New" MinWidth="76" Click="OnNewProfile"/>
+                  <Button Classes="dialog" Content="Rename" MinWidth="76" Click="OnRenameProfile"/>
+                  <Button x:Name="RemoveProfileButton" Classes="dialog" Content="Remove" MinWidth="76" Click="OnRemoveProfile"/>
+                </StackPanel>
+              </local:SettingsField>
+            </local:SettingsCard>
+          </local:SettingsSection>
+        </StackPanel>
+      </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock Text="General"/>
+        </TabItem.Header>
+        <local:SettingsCard>
+          <CheckBox x:Name="SimpleSobBox" Content="Simple Sum of Best Calculation"/>
+          <CheckBox x:Name="WarnOnResetBox" Content="Warn On Reset If Better Times"/>
+          <local:SettingsField Label="Refresh Rate (Hz):">
+            <NumericUpDown x:Name="RefreshRateBox" Classes="settingsNumeric" Width="104" MinWidth="104" MaxWidth="104"
+                           Height="26" MinHeight="26" Minimum="20" Maximum="300" Increment="1"
+                           FormatString="0" VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Left" Padding="8,0,6,0"/>
+          </local:SettingsField>
+          <local:SettingsField Label="Active Comparisons:">
+            <Button x:Name="ChooseComparisonsButton" Classes="dialog" Content="Choose Active Comparisons..."
+                    Click="OnChooseComparisons"/>
+          </local:SettingsField>
+          <local:SettingsField Label="Appearance:">
+            <ComboBox x:Name="AppearanceBox" Classes="settingsCombo" Width="200"
+                      SelectionChanged="OnAppearanceChanged">
+              <ComboBoxItem Content="System" Tag="System"/>
+              <ComboBoxItem Content="Light" Tag="Light"/>
+              <ComboBoxItem Content="Dark" Tag="Dark"/>
+            </ComboBox>
+          </local:SettingsField>
+        </local:SettingsCard>
+      </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock Text="Racing"/>
+        </TabItem.Header>
+        <local:SettingsCard>
+          <local:SettingsField Label="Race Viewer:">
+            <ComboBox x:Name="RaceViewerBox" Classes="settingsCombo" Width="230">
+              <ComboBoxItem Content="SpeedRunsLive"/>
+              <ComboBoxItem Content="MultiTwitch"/>
+              <ComboBoxItem Content="Kadgar"/>
+              <ComboBoxItem Content="Speedrun.tv"/>
+            </ComboBox>
+          </local:SettingsField>
+          <local:SettingsField Label="Racing Services:">
+            <Button x:Name="ManageRaceProvidersButton" Classes="dialog" Content="Manage Racing Services..."
+                    Click="OnManageRaceProviders"/>
+          </local:SettingsField>
+          <local:SettingsField Label="Saved Accounts:">
+            <Button x:Name="LogOutButton" Classes="dialog" Content="Log Out of All Accounts" Click="OnLogOut"/>
+          </local:SettingsField>
+        </local:SettingsCard>
+      </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock Text="Server"/>
+        </TabItem.Header>
+        <local:SettingsSection Header="LiveSplit Server">
+          <local:SettingsCard>
+            <local:SettingsField Label="Server Port:">
+              <TextBox x:Name="ServerPortBox" Width="100" Height="26" Text="16834" HorizontalAlignment="Left"/>
+            </local:SettingsField>
+            <local:SettingsField Label="Startup Behavior:">
+              <ComboBox x:Name="ServerStartupBox" Classes="settingsCombo" Width="230">
+                <ComboBoxItem Content="Don't start the Server"/>
+                <ComboBoxItem Content="Start TCP Server"/>
+                <ComboBoxItem Content="Start Websocket Server"/>
+                <ComboBoxItem Content="Restore Previous State"/>
+              </ComboBox>
+            </local:SettingsField>
+          </local:SettingsCard>
+        </local:SettingsSection>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

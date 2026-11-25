@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Component scan spike (Basten 27 Oct): lists which LiveSplit.Core, WinForms, System.Drawing and
+    Windows APIs real third-party component DLLs use, by reading their metadata (nothing is loaded
+    or run). dotnet run with tools/component-scan in Release mode and the folder with the DLLs
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+</Project>

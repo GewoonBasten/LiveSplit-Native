@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>UpdateManager</AssemblyName>
+    <RootNamespace>UpdateManager</RootNamespace>
+    <AssemblyVersion>99.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+</Project>

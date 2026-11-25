@@ -1,0 +1,601 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LiveSplitNative.App"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+  <!--
+    App-wide dialog/menu density + chrome font: the system UI font (San Francisco on macOS, as
+    Windows LiveSplit dialogs use Windows' Segoe UI).
+    Fluent Compact still leaves TabItem large on macOS — force TabItem to 12pt here.
+    Timer window keeps its own digit FontFamily/FontSize on TextBlocks.
+  -->
+
+  <Styles.Resources>
+    <FontFamily x:Key="LiveSplitChromeFont">SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif</FontFamily>
+    <sys:Double x:Key="LiveSplitControlFontSize">12</sys:Double>
+    <!-- ColorView: compact square-button toolbar strip (breathing room above spectrum) -->
+    <sys:Double x:Key="ColorViewTabStripHeight">40</sys:Double>
+  </Styles.Resources>
+
+  <!-- No grey toolbar strip — transparent chrome; mode icons centered as one group -->
+  <Style Selector="ColorView">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ColorView /template/ Border#TabBackgroundBorder">
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="ColorView /template/ Border#ContentBackgroundBorder">
+    <Setter Property="Margin" Value="0,40,0,0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <!-- Not centered: Fluent's TabControl passes HorizontalAlignment to the Border around strip
+       and content, so a centered TabControl laid every tab out at its content's own width
+       (12 px palette swatches, stub Components sliders). Only the strip is centered, below. -->
+  <Style Selector="ColorView /template/ TabControl">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="ColorView /template/ TabControl /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ColorView /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+  <!-- Value / component sliders: keep enough track pixels for gradient bitmaps -->
+  <!-- The spectrum tab's vertical sliders only; the Components tab's sliders are horizontal. -->
+  <Style Selector="ColorView ColorSlider[Orientation=Vertical]">
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MinHeight" Value="120"/>
+  </Style>
+  <Style Selector="ColorView ColorSlider#ColorSpectrumThirdComponentSlider">
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="Width" Value="28"/>
+  </Style>
+  <Style Selector="ColorView ColorSpectrum">
+    <Setter Property="MinWidth" Value="220"/>
+    <Setter Property="MinHeight" Value="220"/>
+    <Setter Property="Width" Value="256"/>
+    <Setter Property="Height" Value="256"/>
+  </Style>
+  <!--
+    Compact square toolbar: light/clear inactive chrome; quiet selected (no dark fill,
+    no blue underline). Centered as one group — not stretched across the dialog width.
+  -->
+  <Style Selector="ColorView TabItem">
+    <Setter Property="Theme" Value="{StaticResource ColorViewSquareTabItemTheme}"/>
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MaxWidth" Value="28"/>
+    <!-- Tight side gaps: three icons read as one centered group (user-color-picker-icons-far). -->
+    <Setter Property="Margin" Value="2,6,2,6"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="ColorView TabItem /template/ Border#PART_LayoutRoot">
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Padding" Value="3"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="ColorView TabItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource LsDialogColorTabSelectedBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabSelectedBorderBrush}"/>
+  </Style>
+  <Style Selector="ColorView TabItem:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource LsDialogColorTabHoverBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabHoverBorderBrush}"/>
+  </Style>
+  <!-- Kill Fluent blue underline in all states (template sets Visible=True when selected) -->
+  <Style Selector="ColorView TabItem /template/ Border#PART_SelectedPipe">
+    <Setter Property="IsVisible" Value="False"/>
+    <Setter Property="Opacity" Value="0"/>
+    <Setter Property="Height" Value="0"/>
+    <Setter Property="Width" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ColorView TabItem:selected /template/ Border#PART_SelectedPipe">
+    <Setter Property="IsVisible" Value="False"/>
+    <Setter Property="Opacity" Value="0"/>
+    <Setter Property="Height" Value="0"/>
+  </Style>
+  <Style Selector="ColorView TabControl">
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <!-- ColorView's hex box (and the component number boxes) have a fixed 32 px height sized for
+       Fluent's 14 px text; with the dialogs' 12 px text Fluent's top alignment left the text high
+       in the box, below the centered "#". Center it in the box. -->
+  <Style Selector="ColorView TextBox">
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ColorView PathIcon">
+    <Setter Property="Width" Value="14"/>
+    <Setter Property="Height" Value="14"/>
+  </Style>
+
+  <!-- Global chrome font + size for all windows (timer digits set explicitly larger) -->
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+  </Style>
+  <!--
+    Settings/dialog chrome: semantic bg+fg so Dark Appearance never paints light-on-light
+    or light-on-dark. MainWindow keeps its own #0F0F0F / layout brushes.
+  -->
+  <Style Selector="Window:not(local|MainWindow)">
+    <Setter Property="Background" Value="{DynamicResource LsDialogWindowBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+  </Style>
+  <Style Selector="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+  </Style>
+  <!-- Inherit readable dialog foreground (Fluent Dark was invisible on hardcoded white panels). -->
+  <Style Selector="Window:not(local|MainWindow) TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+  </Style>
+  <Style Selector="Window:not(local|MainWindow) CheckBox">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+  </Style>
+  <Style Selector="Window:not(local|MainWindow) RadioButton">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+  </Style>
+  <Style Selector="Window:not(local|MainWindow) Label">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+  </Style>
+  <!--
+    Text placement (proof 93, 93-text-audit.txt): SF Pro Text's capitals sit 1.5 px above the
+    middle of its line box at 12 px, so text centred by its line box looks high in its control.
+    Every control whose text is centred gets 3 px more padding above than below (1.5 px down),
+    so its capitals are centred on the box, circle, button or field.
+  -->
+  <Style Selector="TextBox">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+  </Style>
+  <!-- A label centred on the row beside its field: down like the field's own text, so the two
+       read as one line. 1 px, a whole pixel at 1x and 2x (1.5 px rounded to 2 at 1x and
+       overshot). Drawn lower only; the layout does not change. -->
+  <!-- Only labels laid out in a panel: a template's own text (a field's watermark, a combo box's
+       placeholder) is placed by its control. -->
+  <Style Selector="Window:not(local|MainWindow) Grid > TextBlock[VerticalAlignment=Center], Window:not(local|MainWindow) StackPanel > TextBlock[VerticalAlignment=Center], Window:not(local|MainWindow) DockPanel > TextBlock[VerticalAlignment=Center]">
+    <Setter Property="RenderTransform" Value="translateY(1px)"/>
+  </Style>
+  <!-- Combo boxes without the settings class (Fluent's 12,5,0,7 padding put their text 2.5 px
+       high): centred like the settings ones. -->
+  <Style Selector="Window:not(local|MainWindow) ComboBox">
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="8,2,4,0"/>
+  </Style>
+  <!-- Fluent puts a field's text at the top of its padding (6 px down in a 32 px box); the dialog
+       fields are 22-26 px, which left the text 2.5 px high. -->
+  <Style Selector="Window:not(local|MainWindow) TextBox">
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="6,3,6,0"/>
+  </Style>
+  <Style Selector="CheckBox">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="Padding" Value="4,3.5,0,0.5"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+  </Style>
+  <!-- The 32 px area Fluent gives the box / circle is set to 24 px in FluentTemplateSizes. -->
+  <!-- Prevent hyphenated labels (e.g. Anti-aliasing) from wrapping+clipping inside Fluent CheckBox. -->
+  <Style Selector="CheckBox TextBlock">
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="TextTrimming" Value="None"/>
+  </Style>
+  <Style Selector="RadioButton">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="Padding" Value="4,3.5,0,0.5"/>
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+  </Style>
+  <!--
+    Settings ComboBox (Format / Accuracy / gradients): Fluent’s asymmetric
+    ComboBoxPadding (12,5,0,7) + Stretch makes short values like “1” / “.23” look off.
+    Balanced padding, left-aligned content, vertically centered — match dialog text.
+  -->
+  <Style Selector="ComboBox.settingsCombo">
+    <Setter Property="Height" Value="26"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="MaxHeight" Value="26"/>
+    <Setter Property="Padding" Value="8,2,4,0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderSoftBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource TextControlBackground}"/>
+    <Setter Property="ItemContainerTheme" Value="{StaticResource SettingsComboBoxItemTheme}"/>
+  </Style>
+  <Style Selector="ComboBox.settingsCombo /template/ ContentControl#ContentPresenter">
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="ComboBox.settingsCombo /template/ TextBlock#PlaceholderTextBlock">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ComboBoxItem">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <!--
+    Settings numerics: SettingsNumericUpDownTheme = one compact unit (field + stacked
+    chevrons). Do not regress to Fluent’s three floating boxes. Shared Grid label column
+    (ComponentSettingsEditor.Labeled) still aligns rows — alignment is not the deliverable.
+  -->
+  <Style Selector="NumericUpDown">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="Padding" Value="8,0,6,0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="NumericUpDown.settingsNumeric">
+    <Setter Property="Theme" Value="{StaticResource SettingsNumericUpDownTheme}"/>
+    <Setter Property="Width" Value="104"/>
+    <Setter Property="MinWidth" Value="104"/>
+    <Setter Property="MaxWidth" Value="104"/>
+    <Setter Property="Height" Value="26"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="MaxHeight" Value="26"/>
+    <Setter Property="IsReadOnly" Value="False"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="8,0,6,0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderSoftBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource TextControlBackground}"/>
+  </Style>
+  <Style Selector="NumericUpDown.settingsNumeric /template/ TextBox#PART_TextBox">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <!-- IsReadOnly comes from NumericUpDown via TemplateBinding — do not force here. -->
+    <Setter Property="IsUndoEnabled" Value="True"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+    <Setter Property="Padding" Value="8,3,6,0"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Button">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+  </Style>
+
+  <!--
+    WinForms folder tabs ONLY on dialog TabControls (class=dialogTabs).
+    Must NOT apply to ColorView’s internal TabItems — that stole ColorViewTabItemTheme
+    and made spectrum/palette/slider icons float with orphan blue underlines.
+  -->
+  <Style Selector="TabControl.dialogTabs">
+    <Setter Property="Theme" Value="{StaticResource WinFormsTabControlTheme}"/>
+    <!-- ItemContainerTheme covers code-built TabItems (Layout Settings) too -->
+    <Setter Property="ItemContainerTheme" Value="{StaticResource WinFormsTabItemTheme}"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <!-- Extra bottom pad so last controls aren’t tight against the content Border -->
+    <Setter Property="Padding" Value="6,6,6,10"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+  </Style>
+  <!-- Layout Settings / overflow demos — strip ◀▶ clear of folder tab faces -->
+  <Style Selector="local|DialogTabControl.dialogTabs">
+    <Setter Property="Theme" Value="{StaticResource WinFormsTabControlOverflowTheme}"/>
+    <Setter Property="ItemContainerTheme" Value="{StaticResource WinFormsTabItemTheme}"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="Padding" Value="6,6,6,10"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+  </Style>
+  <Style Selector="TabControl.dialogTabs > TabItem">
+    <Setter Property="Theme" Value="{StaticResource WinFormsTabItemTheme}"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <!-- No left inset — selected folder tab flush with content Border -->
+    <Setter Property="Margin" Value="0,2,1,0"/>
+  </Style>
+  <Style Selector="TabControl.dialogTabs > TabItem:selected">
+    <Setter Property="Margin" Value="0,0,1,-1"/>
+  </Style>
+  <Style Selector="TabControl.dialogTabs /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="TabControl.dialogTabs > TabItem TextBlock">
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <!-- Menus: ~12pt tight rows; full-height flyout (no short clipped viewport) -->
+  <Style Selector="ContextMenu">
+    <Setter Property="Theme" Value="{StaticResource FullHeightContextMenuTheme}"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MaxHeight" Value="10000"/>
+  </Style>
+  <Style Selector="MenuFlyoutPresenter">
+    <Setter Property="Theme" Value="{StaticResource FullHeightMenuFlyoutPresenterTheme}"/>
+    <Setter Property="MaxHeight" Value="10000"/>
+  </Style>
+  <!-- Submenu popups (MenuItem PART_Popup) — same: don't clip to a short scroll port -->
+  <Style Selector="MenuItem /template/ Popup#PART_Popup ScrollViewer">
+    <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="MaxHeight" Value="10000"/>
+  </Style>
+  <Style Selector="ContextMenu MenuItem">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="Padding" Value="8,2,16,2"/>
+  </Style>
+  <Style Selector="MenuItem">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="Padding" Value="8,2,16,2"/>
+  </Style>
+
+  <Style Selector="DataGridColumnHeader">
+    <Setter Property="Background" Value="{DynamicResource LsDialogHeaderBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogHeaderForeground}"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="Padding" Value="8,5"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogHeaderBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+
+  <!-- Font only globally — light dialogs set ItemContainerTheme on their ListBox -->
+  <Style Selector="ListBox">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+  </Style>
+  <Style Selector="DataGrid">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="RowHeight" Value="28"/>
+  </Style>
+  <Style Selector="DataGridRow">
+    <Setter Property="MinHeight" Value="28"/>
+  </Style>
+  <Style Selector="DataGridCell">
+    <Setter Property="Padding" Value="6,4"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <!-- Splits Editor Icon column: the square icon well fills the row itself. -->
+  <Style Selector="DataGridCell.iconCell">
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <!-- WinForms-like group box: light border, title above content, modest radius -->
+  <Style Selector="Border.groupBox">
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderSoftBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="10,8,10,10"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogGroupBoxBackground}"/>
+    <Setter Property="Margin" Value="0,6,0,4"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.groupBoxNested">
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="8,6,8,8"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogGroupBoxNestedBackground}"/>
+    <Setter Property="Margin" Value="0,4,0,2"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Button.dialog">
+    <Setter Property="Theme" Value="{StaticResource WinFormsButtonTheme}"/>
+    <Setter Property="MinWidth" Value="75"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <!-- 3 px more above than below: the capitals' middle on the button's (see TextBox above). -->
+    <Setter Property="Padding" Value="10,4,10,1"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="6"/>
+  </Style>
+
+  <!-- Hotkeys Clear etc. — must not inherit dialog MinWidth=75 (clipped in 56px column). -->
+  <Style Selector="Button.dialogCompact">
+    <Setter Property="Theme" Value="{StaticResource WinFormsCompactButtonTheme}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="Padding" Value="6,4,6,1"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="6"/>
+  </Style>
+
+  <!-- Tab strip overflow arrows — outside folder tab faces -->
+  <Style Selector="Button.tabStripArrow">
+    <Setter Property="Theme" Value="{StaticResource WinFormsCompactButtonTheme}"/>
+    <Setter Property="Width" Value="22"/>
+    <Setter Property="Height" Value="22"/>
+    <Setter Property="MinWidth" Value="22"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="FontSize" Value="10"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="3"/>
+  </Style>
+
+  <Style Selector="Button.dialogSide">
+    <Setter Property="Theme" Value="{StaticResource WinFormsButtonTheme}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Width" Value="128"/>
+    <Setter Property="MaxWidth" Value="128"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="Padding" Value="4,4,4,1"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="6"/>
+  </Style>
+
+  <Style Selector="Button.colorSwatch">
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="CornerRadius" Value="4"/>
+  </Style>
+
+  <Style Selector="Button.layoutTool">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="36"/>
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="MinHeight" Value="36"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="18"/>
+    <Setter Property="FontSize" Value="16"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogLayoutToolBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderSoftBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogHeaderForeground}"/>
+  </Style>
+  <Style Selector="Button.layoutTool:pointerover">
+    <Setter Property="Background" Value="{DynamicResource LsDialogButtonHoverBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogButtonHoverBorderBrush}"/>
+  </Style>
+
+  <Style Selector="ContextMenu.addComponentMenu">
+    <Setter Property="Theme" Value="{StaticResource FullHeightContextMenuTheme}"/>
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MaxHeight" Value="10000"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogMenuBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+    <Setter Property="Padding" Value="2"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="MinWidth" Value="140"/>
+  </Style>
+  <Style Selector="ContextMenu.addComponentMenu MenuItem">
+    <Setter Property="FontFamily" Value="{StaticResource LiveSplitChromeFont}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="Padding" Value="8,2,18,2"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+  </Style>
+  <!--
+    The settings look (Basten, 27 Oct sketch, "apply them everywhere in the menus"): cards with
+    hairlines between rows (SettingsCards.cs), headings above them, grey units, segmented tabs,
+    a footer bar with OK on the right in the accent color.
+  -->
+  <Style Selector="local|SettingsCard">
+    <Setter Property="Background" Value="{DynamicResource LsDialogCardBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogCardBorderBrush}"/>
+    <Setter Property="SeparatorBrush" Value="{DynamicResource LsDialogRowSeparatorBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.sectionTitle">
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Margin" Value="4,0,0,0"/>
+  </Style>
+  <Style Selector="TextBlock.subsectionTitle">
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+  <Style Selector="local|SettingsCard.nestedCard">
+    <Setter Property="Background" Value="{x:Null}"/>
+    <Setter Property="BorderBrush" Value="{x:Null}"/>
+  </Style>
+  <Style Selector="local|SettingsField:disabled > TextBlock.fieldLabel">
+    <Setter Property="Opacity" Value="0.45"/>
+  </Style>
+  <Style Selector="Run.hint">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogHintForeground}"/>
+  </Style>
+  <Style Selector="Border.dialogFooter">
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogFooterBorderBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogWindowBackground}"/>
+    <!-- 24 at the sides: the buttons line up with the cards' edges (page padding 24). -->
+    <Setter Property="Padding" Value="24,14"/>
+  </Style>
+  <!-- Any dialog's default button (IsDefault) is the accent button by itself; new dialogs
+       need no extra class. -->
+  <Style Selector="Button.dialog.primary, Button.dialog[IsDefault=True]">
+    <Setter Property="Background" Value="{DynamicResource LsDialogPrimaryBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogPrimaryBackground}"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogOnAccentForeground}"/>
+  </Style>
+  <Style Selector="Button.dialog.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button.dialog[IsDefault=True]:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource LsDialogPrimaryHoverBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogPrimaryHoverBackground}"/>
+  </Style>
+  <Style Selector="Button.dialog.primary:pressed /template/ ContentPresenter#PART_ContentPresenter, Button.dialog[IsDefault=True]:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource LsDialogPrimaryPressedBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogPrimaryPressedBackground}"/>
+  </Style>
+  <Style Selector="Window:not(local|MainWindow) Button.dialog.primary TextBlock, Window:not(local|MainWindow) Button.dialog[IsDefault=True] TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogOnAccentForeground}"/>
+  </Style>
+  <Style Selector="TabControl.segmentedTabs">
+    <Setter Property="Theme" Value="{StaticResource SegmentedTabControlTheme}"/>
+    <Setter Property="ItemContainerTheme" Value="{StaticResource SegmentedTabItemTheme}"/>
+  </Style>
+  <Style Selector="local|DialogTabControl.segmentedTabs">
+    <Setter Property="Theme" Value="{StaticResource SegmentedTabControlOverflowTheme}"/>
+    <Setter Property="ItemContainerTheme" Value="{StaticResource SegmentedTabItemTheme}"/>
+  </Style>
+  <Style Selector="local|DialogTabControl.segmentedTabs > TabItem">
+    <Setter Property="Theme" Value="{StaticResource SegmentedTabItemTheme}"/>
+  </Style>
+  <Style Selector="TabControl.segmentedTabs > TabItem">
+    <Setter Property="Theme" Value="{StaticResource SegmentedTabItemTheme}"/>
+  </Style>
+</Styles>

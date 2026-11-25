@@ -1,0 +1,943 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--
+    Dialog buttons — Fluent-style ContentPresenter (padding + content alignment on the
+    presenter). Extra bottom pad offsets Helvetica/Segoe cap-height so labels don’t sit high.
+  -->
+  <ControlTheme x:Key="WinFormsButtonTheme" TargetType="Button">
+    <Setter Property="Background" Value="{DynamicResource LsDialogButtonBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderSoftBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="MinWidth" Value="75"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <!-- Optical vertical center: extra top pad — Helvetica/Segoe caps sit high in the em-box. -->
+    <Setter Property="Padding" Value="12,5,12,1"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter x:Name="PART_ContentPresenter"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Foreground="{TemplateBinding Foreground}"
+                          Padding="{TemplateBinding Padding}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          RecognizesAccessKey="True"/>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogButtonHoverBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogButtonHoverBorderBrush}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogButtonPressedBackground}"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Opacity" Value="0.55"/>
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Full-height menus: Fluent ContextMenu wraps ItemsPresenter in ScrollViewer and
+    often clips to a short viewport. We keep a ScrollViewer only as last resort
+    (Auto bars) with MaxHeight left to the screen working area (set in code).
+  -->
+  <ControlTheme x:Key="FullHeightContextMenuTheme" TargetType="ContextMenu">
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}"/>
+    <Setter Property="Padding" Value="{DynamicResource MenuFlyoutPresenterThemePadding}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="WindowManagerAddShadowHint" Value="False"/>
+    <!-- Prefer showing every item; MaxHeight is raised to screen in MenuChrome -->
+    <Setter Property="MaxHeight" Value="10000"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}"
+                MaxWidth="{TemplateBinding MaxWidth}"
+                MaxHeight="{TemplateBinding MaxHeight}"
+                MinHeight="{TemplateBinding MinHeight}"
+                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <!-- Auto scrollbar only if content exceeds MaxHeight (screen; set in MenuChrome) -->
+          <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto"
+                        MaxHeight="{TemplateBinding MaxHeight}">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            Margin="0,4,0,4"
+                            KeyboardNavigation.TabNavigation="Continue"
+                            Grid.IsSharedSizeScope="True"/>
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="FullHeightMenuFlyoutPresenterTheme" TargetType="MenuFlyoutPresenter">
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"/>
+    <Setter Property="Padding" Value="{DynamicResource MenuFlyoutPresenterThemePadding}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}"/>
+    <Setter Property="MaxHeight" Value="10000"/>
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource OverlayCornerRadius}"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="LayoutRoot"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{DynamicResource FlyoutBorderThemePadding}"
+                MaxHeight="{TemplateBinding MaxHeight}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                        MaxHeight="{TemplateBinding MaxHeight}">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            Margin="0,4,0,4"
+                            KeyboardNavigation.TabNavigation="Continue"
+                            Grid.IsSharedSizeScope="True"/>
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- Classic WinForms folder tabs (not Fluent underline / hyperlink look) -->
+  <ControlTheme x:Key="WinFormsTabItemTheme" TargetType="TabItem">
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogTabBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1,1,1,0"/>
+    <Setter Property="Padding" Value="10,2.5,10,2.5"/>
+    <!-- Unselected: 2px lower + 1px sibling gap. Selected overrides to overlap content top border. -->
+    <Setter Property="Margin" Value="0,2,1,0"/>
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="MaxHeight" Value="26"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            Foreground="{TemplateBinding Foreground}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontWeight="{TemplateBinding FontWeight}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            RecognizesAccessKey="True"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <!-- Selected folder tab: white face, overlaps content top border so L/R edges meet the panel -->
+    <Style Selector="^:selected">
+      <Setter Property="Background" Value="{DynamicResource LsDialogPanelBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderBrush}"/>
+      <Setter Property="Margin" Value="0,0,1,-1"/>
+      <Setter Property="ZIndex" Value="2"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource LsDialogColorTabSelectedBackground}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource LsDialogPanelBackground}"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Opacity" Value="0.55"/>
+    </Style>
+  </ControlTheme>
+
+  <!-- Compact Clear / side actions — WinFormsButtonTheme MinWidth=75 clipped Hotkeys Clear. -->
+  <ControlTheme x:Key="WinFormsCompactButtonTheme" TargetType="Button">
+    <Setter Property="Background" Value="{DynamicResource LsDialogButtonBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderSoftBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="Padding" Value="6,4,6,1"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter x:Name="PART_ContentPresenter"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Foreground="{TemplateBinding Foreground}"
+                          Padding="{TemplateBinding Padding}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          RecognizesAccessKey="True"/>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogButtonHoverBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogButtonHoverBorderBrush}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogButtonPressedBackground}"/>
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Opacity" Value="0.55"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="WinFormsTabControlTheme" TargetType="TabControl">
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="Padding" Value="4"/>
+    <Setter Property="Background" Value="{DynamicResource LsDialogPanelBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <!-- Top — Stretch + Auto,* previously collapsed / clipped Hotkeys measure -->
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+    <!-- Horizontal strip; no default panel margin -->
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="0" Margin="0"/>
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <!--
+          Auto,Auto (not Auto,*) so SizeToContent / desired-height includes the selected
+          page. Keep PART_ItemsPresenter direct (ScrollViewer/clip wrappers collapsed
+          Settings to MinHeight blank). Overflow arrows live in WinFormsTabControlOverflowTheme.
+        -->
+        <Grid RowDefinitions="Auto,Auto">
+          <ItemsPresenter Name="PART_ItemsPresenter"
+                          Grid.Row="0"
+                          ItemsPanel="{TemplateBinding ItemsPanel}"
+                          Margin="0"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Bottom"
+                          ZIndex="1"/>
+          <Border Grid.Row="1"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  Margin="0,-1,0,0"
+                  Padding="{TemplateBinding Padding}"
+                  CornerRadius="0"
+                  ClipToBounds="False">
+            <ContentPresenter Name="PART_SelectedContentHost"
+                              HorizontalContentAlignment="Stretch"
+                              VerticalContentAlignment="Top"
+                              VerticalAlignment="Top"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+          </Border>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- Same folder tabs + ◀▶ in reserved chrome (never overlays tab faces). -->
+  <ControlTheme x:Key="WinFormsTabControlOverflowTheme" TargetType="TabControl"
+                BasedOn="{StaticResource WinFormsTabControlTheme}">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Name="PART_LayoutRoot" RowDefinitions="Auto,Auto">
+          <!--
+            Fixed 24px chrome columns always present when overflow theme is used.
+            DialogTabControl collapses them to Width=0 when unused. Tabs live only
+            in the center clip — arrows cannot paint over tab labels.
+          -->
+          <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0" ZIndex="1">
+            <!-- Width 0 until DialogTabControl reserves chrome — then 24px, tabs shrink in * -->
+            <Border Name="PART_LeftChrome"
+                    Grid.Column="0"
+                    Width="0"
+                    MinWidth="0"
+                    ClipToBounds="True"
+                    Background="{DynamicResource LsDialogChromeStripBackground}"
+                    BorderBrush="{DynamicResource LsDialogChromeStripBorderBrush}"
+                    BorderThickness="0,0,1,0"
+                    VerticalAlignment="Stretch"
+                    Margin="0,0,0,0"
+                    ZIndex="2">
+              <Button Name="PART_ScrollLeft"
+                      Classes="tabStripArrow"
+                      Content="◀"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Bottom"
+                      Margin="0,0,0,2"
+                      IsVisible="False"
+                      ToolTip.Tip="Scroll tabs left"/>
+            </Border>
+            <Border Name="PART_TabStripClip"
+                    Grid.Column="1"
+                    ClipToBounds="True"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Margin="0"
+                    Background="Transparent"
+                    ZIndex="0">
+              <!-- Inner panel also clips — RenderTransform can otherwise bleed under chrome -->
+              <Panel ClipToBounds="True">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                Margin="0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"/>
+              </Panel>
+            </Border>
+            <Border Name="PART_RightChrome"
+                    Grid.Column="2"
+                    Width="0"
+                    MinWidth="0"
+                    ClipToBounds="True"
+                    Background="{DynamicResource LsDialogChromeStripBackground}"
+                    BorderBrush="{DynamicResource LsDialogChromeStripBorderBrush}"
+                    BorderThickness="1,0,0,0"
+                    VerticalAlignment="Stretch"
+                    Margin="0,0,0,0"
+                    ZIndex="2">
+              <Button Name="PART_ScrollRight"
+                      Classes="tabStripArrow"
+                      Content="▶"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Bottom"
+                      Margin="0,0,0,2"
+                      IsVisible="False"
+                      ToolTip.Tip="Scroll tabs right"/>
+            </Border>
+          </Grid>
+          <Border Grid.Row="1"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  Margin="0,-1,0,0"
+                  Padding="{TemplateBinding Padding}"
+                  CornerRadius="0"
+                  ClipToBounds="False">
+            <ContentPresenter Name="PART_SelectedContentHost"
+                              HorizontalContentAlignment="Stretch"
+                              VerticalContentAlignment="Top"
+                              VerticalAlignment="Top"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+          </Border>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="LightDialogListBoxItemTheme" TargetType="ListBoxItem">
+    <!-- ~12pt LiveSplit/Mac control density (use on Light dialogs) -->
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}"
+                MinHeight="{TemplateBinding MinHeight}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="Center"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:selected /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource LsDialogAccentAltBrush}"/>
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogOnAccentForeground}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource LsDialogListHoverBackground}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource LsDialogAccentAltBrush}"/>
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Layout Editor component list: name-only rows, consistent height, subtle separators.
+    No decorative component-type icons (those stay on the Add Component menu only).
+  -->
+  <ControlTheme x:Key="LayoutEditorListBoxItemTheme" TargetType="ListBoxItem">
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="Padding" Value="8,0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}"
+                Height="28"
+                MinHeight="28"
+                BorderBrush="{DynamicResource LsDialogListSeparatorBrush}"
+                BorderThickness="0,0,0,1">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="Center"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:selected /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource LsDialogAccentAltBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogAccentAltBrush}"/>
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogOnAccentForeground}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource LsDialogListHoverBackground}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource LsDialogAccentAltBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogAccentAltBrush}"/>
+    </Style>
+  </ControlTheme>
+
+  <!--
+    ColorView mode icons as a compact square-button toolbar — no Fluent blue underline pipe.
+    Applied from DialogStyles to ColorView TabItems (replaces ColorViewTabItemTheme).
+  -->
+  <ControlTheme x:Key="ColorViewSquareTabItemTheme" TargetType="TabItem">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogSecondaryForeground}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="1,4,1,2"/>
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MaxWidth" Value="28"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot"
+                Width="28" Height="28"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="3">
+          <Panel>
+            <!-- Keep pipe in tree but never show — kills Fluent blue underline -->
+            <Border Name="PART_SelectedPipe" IsVisible="False" Height="0" Width="0"/>
+            <ContentPresenter Name="PART_ContentPresenter"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Header}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}"/>
+          </Panel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource LsDialogColorTabSelectedBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabSelectedBorderBrush}"/>
+    </Style>
+    <Style Selector="^:pointerover /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource LsDialogColorTabHoverBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabHoverBorderBrush}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource LsDialogColorTabSelectedBackground}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogColorTabSelectedBorderBrush}"/>
+    </Style>
+    <Style Selector="^:selected /template/ Border#PART_SelectedPipe">
+      <Setter Property="IsVisible" Value="False"/>
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Settings ComboBox items — left-aligned list text (Fluent defaults Stretch and looks
+    centered for short tokens like “1” / “.23”). Applied via ItemContainerTheme.
+  -->
+  <ControlTheme x:Key="SettingsComboBoxItemTheme" TargetType="ComboBoxItem">
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogSecondaryForeground}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter Name="PART_ContentPresenter"
+                          Foreground="{TemplateBinding Foreground}"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Content="{TemplateBinding Content}"
+                          HorizontalContentAlignment="Left"
+                          VerticalContentAlignment="Center"
+                          Padding="{TemplateBinding Padding}"/>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogButtonHoverBackground}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogButtonPressedBackground}"/>
+    </Style>
+    <Style Selector="^:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogAccentBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogOnAccentForeground}"/>
+    </Style>
+    <Style Selector="^:selected:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource LsDialogAccentPressedBrush}"/>
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogOnAccentForeground}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ ContentPresenter">
+      <Setter Property="Opacity" Value="0.45"/>
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Settings NumericUpDown — one compact spinner (field + stacked chevrons), not Fluent’s
+    three floating boxes (text + side-by-side square buttons with gaps).
+  -->
+  <StreamGeometry x:Key="SettingsSpinnerIncreaseIcon">M0,5 L5,0 10,5 z</StreamGeometry>
+  <StreamGeometry x:Key="SettingsSpinnerDecreaseIcon">M0,0 L5,5 10,0 z</StreamGeometry>
+
+  <ControlTheme x:Key="SettingsSpinnerRepeatButton" TargetType="RepeatButton">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogSpinnerGlyphBrush}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="Root"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover /template/ Border#Root">
+      <Setter Property="Background" Value="{DynamicResource LsDialogSpinnerHoverBackground}"/>
+    </Style>
+    <Style Selector="^:pressed /template/ Border#Root">
+      <Setter Property="Background" Value="{DynamicResource LsDialogSpinnerPressedBackground}"/>
+    </Style>
+    <Style Selector="^:disabled /template/ Border#Root">
+      <Setter Property="Opacity" Value="0.45"/>
+    </Style>
+  </ControlTheme>
+
+  <!--
+    Chrome-less TextBox face inside the spinner (no Fluent dual-border / underline).
+    Must stay fully editable — prior minimal template broke click/type/select/undo
+    (OneWay Text + no PART_ScrollViewer hit target). Mirror Fluent’s editable parts.
+  -->
+  <ControlTheme x:Key="SettingsNumericTextBoxTheme" TargetType="TextBox">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="Padding" Value="8,0,4,0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="IsUndoEnabled" Value="True"/>
+    <Setter Property="AcceptsReturn" Value="False"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+    <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}"/>
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}"/>
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <!-- Transparent fill must stay hit-testable so clicks focus the field, not only glyphs. -->
+          <Border Background="Transparent"
+                  BorderThickness="0"
+                  MinWidth="{TemplateBinding MinWidth}"
+                  MinHeight="{TemplateBinding MinHeight}">
+            <ScrollViewer Name="PART_ScrollViewer"
+                          Margin="{TemplateBinding Padding}"
+                          HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                          VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                          AllowAutoHide="False"
+                          VerticalAlignment="Stretch">
+              <Panel VerticalAlignment="Center">
+                <TextBlock Name="PART_FloatingWatermark"
+                           IsVisible="False"
+                           Opacity="0"/>
+                <TextBlock Name="PART_Watermark"
+                           Opacity="0.5"
+                           Text="{TemplateBinding Watermark}"
+                           TextAlignment="{TemplateBinding TextAlignment}"
+                           TextWrapping="NoWrap"
+                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                  <TextBlock.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                      <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                    </MultiBinding>
+                  </TextBlock.IsVisible>
+                </TextBlock>
+                <TextPresenter Name="PART_TextPresenter"
+                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                               CaretIndex="{TemplateBinding CaretIndex}"
+                               SelectionStart="{TemplateBinding SelectionStart}"
+                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                               TextAlignment="{TemplateBinding TextAlignment}"
+                               TextWrapping="NoWrap"
+                               PasswordChar="{TemplateBinding PasswordChar}"
+                               RevealPassword="{TemplateBinding RevealPassword}"
+                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                               CaretBrush="{TemplateBinding CaretBrush}"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+              </Panel>
+            </ScrollViewer>
+          </Border>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="SettingsButtonSpinnerTheme" TargetType="ButtonSpinner">
+    <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource TextControlBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <Border Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  MinHeight="{TemplateBinding MinHeight}"
+                  ClipToBounds="True">
+            <DockPanel LastChildFill="True">
+              <!-- Narrow stacked ▲/▼ strip; same fill as field = one visual unit -->
+              <Grid Name="PART_SpinnerPanel"
+                    DockPanel.Dock="Right"
+                    Width="18"
+                    IsVisible="{TemplateBinding ShowButtonSpinner}">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="*"/>
+                  <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!-- Subtle separator only (no filled “button boxes”) -->
+                <Border Grid.RowSpan="2"
+                        BorderBrush="{DynamicResource LsDialogSpinnerSeparatorBrush}"
+                        BorderThickness="1,0,0,0"
+                        Background="Transparent"
+                        IsHitTestVisible="False"/>
+                <Border Grid.Row="0"
+                        BorderBrush="{DynamicResource LsDialogSpinnerSeparatorBrush}"
+                        BorderThickness="0,0,0,1"
+                        IsHitTestVisible="False"/>
+                <RepeatButton Name="PART_IncreaseButton"
+                              Grid.Row="0"
+                              Theme="{StaticResource SettingsSpinnerRepeatButton}"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              Foreground="{TemplateBinding Foreground}"
+                              IsTabStop="{TemplateBinding IsTabStop}">
+                  <PathIcon Width="8" Height="5"
+                            Data="{StaticResource SettingsSpinnerIncreaseIcon}"/>
+                </RepeatButton>
+                <RepeatButton Name="PART_DecreaseButton"
+                              Grid.Row="1"
+                              Theme="{StaticResource SettingsSpinnerRepeatButton}"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              Foreground="{TemplateBinding Foreground}"
+                              IsTabStop="{TemplateBinding IsTabStop}">
+                  <PathIcon Width="8" Height="5"
+                            Data="{StaticResource SettingsSpinnerDecreaseIcon}"/>
+                </RepeatButton>
+              </Grid>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </DockPanel>
+          </Border>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:disabled">
+      <Setter Property="Background" Value="{DynamicResource LsDialogDisabledBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogMutedForeground}"/>
+    </Style>
+    <Style Selector="^:error">
+      <Setter Property="BorderBrush" Value="#FFD70015"/>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="SettingsNumericUpDownTheme" TargetType="NumericUpDown">
+    <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}"/>
+    <Setter Property="Background" Value="{DynamicResource TextControlBackground}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="MinWidth" Value="104"/>
+    <Setter Property="Padding" Value="8,0,4,0"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontFamily" Value="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <ButtonSpinner Name="PART_Spinner"
+                         Theme="{StaticResource SettingsButtonSpinnerTheme}"
+                         Background="{TemplateBinding Background}"
+                         BorderThickness="{TemplateBinding BorderThickness}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         CornerRadius="{TemplateBinding CornerRadius}"
+                         MinHeight="{TemplateBinding MinHeight}"
+                         IsTabStop="False"
+                         Padding="0"
+                         MinWidth="0"
+                         HorizontalContentAlignment="Stretch"
+                         VerticalContentAlignment="Stretch"
+                         AllowSpin="{TemplateBinding AllowSpin}"
+                         ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
+                         ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
+            <TextBox Name="PART_TextBox"
+                     Theme="{StaticResource SettingsNumericTextBoxTheme}"
+                     Background="Transparent"
+                     BorderBrush="Transparent"
+                     BorderThickness="0"
+                     CornerRadius="0"
+                     Margin="0"
+                     Padding="{TemplateBinding Padding}"
+                     MinWidth="0"
+                     MinHeight="0"
+                     Focusable="True"
+                     IsUndoEnabled="True"
+                     Foreground="{TemplateBinding Foreground}"
+                     FontFamily="{TemplateBinding FontFamily}"
+                     FontSize="{TemplateBinding FontSize}"
+                     Watermark="{TemplateBinding Watermark}"
+                     IsReadOnly="{TemplateBinding IsReadOnly}"
+                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                     Text="{TemplateBinding Text}"
+                     TextAlignment="Left"
+                     AcceptsReturn="False"
+                     TextWrapping="NoWrap"
+                     InnerLeftContent="{Binding InnerLeftContent, RelativeSource={RelativeSource TemplatedParent}}"
+                     InnerRightContent="{Binding InnerRightContent, RelativeSource={RelativeSource TemplatedParent}}"/>
+          </ButtonSpinner>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:disabled">
+      <Setter Property="Background" Value="{DynamicResource LsDialogDisabledBackground}"/>
+      <Setter Property="Foreground" Value="{DynamicResource LsDialogMutedForeground}"/>
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+    <Style Selector="^:focus-within">
+      <Setter Property="BorderBrush" Value="{DynamicResource LsDialogButtonHoverBorderBrush}"/>
+    </Style>
+  </ControlTheme>
+  <!--
+    Segmented tabs (Basten, 27 Oct sketch): the tabs as one rounded bar of buttons centred above
+    the page, the selected one raised; the page below it.
+  -->
+  <ControlTheme x:Key="SegmentedTabControlTheme" TargetType="TabControl">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <StackPanel Orientation="Horizontal"/>
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <Border DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0,0,0,22" Padding="2"
+                  CornerRadius="7" Background="{DynamicResource LsDialogSegmentBackground}">
+            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}"/>
+          </Border>
+          <ContentPresenter Name="PART_SelectedContentHost"
+                            Padding="{TemplateBinding Padding}"
+                            Content="{TemplateBinding SelectedContent}"
+                            ContentTemplate="{TemplateBinding SelectedContentTemplate}"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="SegmentedTabItemTheme" TargetType="TabItem">
+    <Setter Property="MinWidth" Value="96"/>
+    <Setter Property="Height" Value="24"/>
+    <Setter Property="Padding" Value="12,0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource LsDialogForeground}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot" Background="{TemplateBinding Background}" CornerRadius="5"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource LsDialogSegmentSelectedBackground}"/>
+      <Setter Property="BoxShadow" Value="0 1 2 0 #2E000000"/>
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+  </ControlTheme>
+  <!--
+    Segmented tabs with ◀ ▶ (DialogTabControl: Layout Settings, the Splits Editor): the same bar
+    of buttons, centred while it fits, scrolled with the arrows beside it when it does not.
+    Same part names as WinFormsTabControlOverflowTheme. The page brings its own padding.
+  -->
+  <ControlTheme x:Key="SegmentedTabControlOverflowTheme" TargetType="TabControl">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <StackPanel Orientation="Horizontal"/>
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Name="PART_LayoutRoot" RowDefinitions="Auto,Auto">
+          <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,2">
+            <Border Name="PART_LeftChrome" Grid.Column="0" Width="0" MinWidth="0" ClipToBounds="True"
+                    VerticalAlignment="Center">
+              <Button Name="PART_ScrollLeft" Classes="tabStripArrow" Content="◀"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      IsVisible="False" ToolTip.Tip="Scroll tabs left"/>
+            </Border>
+            <Border Name="PART_TabStripClip" Grid.Column="1" ClipToBounds="True"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Padding="2" CornerRadius="7"
+                    Background="{DynamicResource LsDialogSegmentBackground}">
+              <Panel ClipToBounds="True">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"/>
+              </Panel>
+            </Border>
+            <Border Name="PART_RightChrome" Grid.Column="2" Width="0" MinWidth="0" ClipToBounds="True"
+                    VerticalAlignment="Center">
+              <Button Name="PART_ScrollRight" Classes="tabStripArrow" Content="▶"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      IsVisible="False" ToolTip.Tip="Scroll tabs right"/>
+            </Border>
+          </Grid>
+          <ContentPresenter Name="PART_SelectedContentHost" Grid.Row="1"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Top"
+                            VerticalAlignment="Top"
+                            Content="{TemplateBinding SelectedContent}"
+                            ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

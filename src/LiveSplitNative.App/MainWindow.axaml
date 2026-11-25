@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LiveSplitNative.App"
+        x:Class="LiveSplitNative.App.MainWindow"
+        Title="LiveSplit"
+        Width="286" Height="519"
+        MinWidth="25" MinHeight="25"
+        SizeToContent="Manual"
+        Background="#FF0F0F0F"
+        CanResize="True"
+        Topmost="True"
+        SystemDecorations="None"
+        ExtendClientAreaToDecorationsHint="False"
+        ExtendClientAreaChromeHints="NoChrome"
+        CornerRadius="0"
+        ClipToBounds="True">
+  <!-- One composited timer visual. Window-level tunnel handlers own unscaled input. -->
+  <local:TimerSurfaceControl x:Name="TimerSurface"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"/>
+</Window>

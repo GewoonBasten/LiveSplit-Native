@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LiveSplitNative.App"
+        x:Class="LiveSplitNative.App.LayoutSettingsWindow"
+        Title="Layout Settings"
+        Width="600"
+        MinWidth="520"
+        MinHeight="420"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"
+        local:SettingsLayout.LabelWidth="212">
+  <!-- WinForms LayoutSettingsDialog: TabControl = Layout + one tab per component -->
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Classes="dialogFooter">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+        <Button Classes="dialog" Content="Cancel" IsCancel="True" MinWidth="75" Click="OnCancel"/>
+        <Button Classes="dialog primary" Content="OK" IsDefault="True" MinWidth="75" Click="OnOk"/>
+      </StackPanel>
+    </Border>
+    <!-- Segmented tabs; ◀ ▶ when the component tabs are wider than the window -->
+    <local:DialogTabControl x:Name="SettingsTabs" Classes="segmentedTabs" Margin="0,20,0,0"/>
+  </DockPanel>
+</Window>

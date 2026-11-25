@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LiveSplitNative.App.AboutWindow"
+        Title="About LiveSplit"
+        Width="380"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif">
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Classes="dialogFooter">
+      <Button Classes="dialog primary" Content="OK" HorizontalAlignment="Right"
+              IsDefault="True" IsCancel="True" Click="OnOk"/>
+    </Border>
+    <StackPanel Spacing="8" Margin="24,20,24,22">
+      <TextBlock Text="LiveSplit" FontSize="20" FontWeight="Bold"/>
+      <TextBlock x:Name="VersionText" Text="Development build"/>
+      <TextBlock Text="LiveSplit for macOS: a port of LiveSplit (livesplit.org) for Windows."
+                 TextWrapping="Wrap" Opacity="0.8"/>
+    </StackPanel>
+  </DockPanel>
+</Window>

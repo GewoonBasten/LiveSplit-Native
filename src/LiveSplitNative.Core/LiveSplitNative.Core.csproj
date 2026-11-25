@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>LiveSplitNative.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="LiveSplitNative.Core.Tests" />
+    <InternalsVisibleTo Include="LiveSplitNative.App.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Windows LiveSplit's locale files (Localization/Locales), next to the app as Localization/*.json. -->
+    <Content Include="Localization\Locales\*.json" Link="Localization\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

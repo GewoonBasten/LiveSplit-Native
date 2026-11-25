@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LiveSplitNative.App"
+        x:Class="LiveSplitNative.App.HotkeySettingsWindow"
+        Title="Hotkey Settings"
+        Width="520"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif"
+        local:SettingsLayout.LabelWidth="170">
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Classes="dialogFooter">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+        <Button Classes="dialog" Content="Cancel" IsCancel="True" Click="OnCancel"/>
+        <Button Classes="dialog primary" Content="OK" IsDefault="True" Click="OnOk"/>
+      </StackPanel>
+    </Border>
+
+    <StackPanel Margin="24,20" Spacing="22">
+      <local:SettingsCard x:Name="FieldsPanel"/>
+      <local:SettingsCard>
+        <CheckBox x:Name="GlobalHotkeysBox" Content="Global Hotkeys"/>
+        <CheckBox x:Name="DoubleTapBox" Content="Double Tap Prevention"/>
+      </local:SettingsCard>
+    </StackPanel>
+  </DockPanel>
+</Window>

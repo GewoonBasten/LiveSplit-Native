@@ -1,0 +1,35 @@
+# Local upstream clones (see UPSTREAM.md)
+/upstream/
+
+# Build outputs
+**/bin/
+**/obj/
+**/artifacts/
+*.user
+.vs/
+.idea/
+
+# OS / tooling
+.DS_Store
+*.swp
+Thumbs.db
+
+# Local research caches (keep checked-in logs under research/evidence/)
+/tmp/
+
+# Local publish / .app assemble
+publish/
+dist/
+
+# Local check runs (tools/mac/check.command)
+.checks/
+
+# dotnet test --blame output
+TestResults/
+
+# Native builds (native/README.md)
+native/asr-capi/target/
+
+# Built native libraries (native/README.md)
+native/osx-*/
+native/livesplit-core-src/

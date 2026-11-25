@@ -1,0 +1,32 @@
+<Project>
+  <!--
+    Puts the look-alike assemblies (LiveSplit.Core, System.Windows.Forms, System.Drawing,
+    UpdateManager, WinFormsColor, LiveSplit.Subsplits) in compat/ next to the app, where
+    ComponentHost's CompatComponentLoader loads them for component DLLs. They are never referenced by the app itself.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)LiveSplit.Core/LiveSplit.Core.csproj" ReferenceOutputAssembly="false" Private="false" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)WinFormsColor/WinFormsColor.csproj" ReferenceOutputAssembly="false" Private="false" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)LiveSplit.Subsplits/LiveSplit.Subsplits.csproj" ReferenceOutputAssembly="false" Private="false" />
+  </ItemGroup>
+  <Target Name="LsnCopyCompat" AfterTargets="Build">
+    <PropertyGroup>
+      <LsnCompatBin>$(MSBuildThisFileDirectory)LiveSplit.Core/bin/$(Configuration)/$(TargetFramework)/</LsnCompatBin>
+    </PropertyGroup>
+    <ItemGroup>
+      <LsnCompatFile Include="$(LsnCompatBin)LiveSplit.Core.dll;$(LsnCompatBin)System.Windows.Forms.dll;$(LsnCompatBin)System.Drawing.dll;$(LsnCompatBin)UpdateManager.dll;$(MSBuildThisFileDirectory)WinFormsColor/bin/$(Configuration)/$(TargetFramework)/WinFormsColor.dll;$(MSBuildThisFileDirectory)LiveSplit.Subsplits/bin/$(Configuration)/$(TargetFramework)/LiveSplit.Subsplits.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(LsnCompatFile)" DestinationFolder="$(OutDir)compat" SkipUnchangedFiles="true" />
+  </Target>
+  <!--
+    dotnet publish (tools/mac/make-app.command) only takes what the app references, so the
+    compat/ folder goes along by itself: without it a downloaded component can't load in the .app.
+  -->
+  <Target Name="LsnPublishCompat" AfterTargets="Publish">
+    <ItemGroup>
+      <LsnPublishCompatFile Include="$(OutDir)compat/*.dll" />
+    </ItemGroup>
+    <Error Condition="'@(LsnPublishCompatFile)' == ''" Text="The compat assemblies are missing from $(OutDir)compat." />
+    <Copy SourceFiles="@(LsnPublishCompatFile)" DestinationFolder="$(PublishDir)compat" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

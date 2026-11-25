@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>WinFormsColor</AssemblyName>
+    <RootNamespace>Fetze.WinFormsColor</RootNamespace>
+    <AssemblyVersion>99.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\System.Drawing\System.Drawing.csproj" />
+    <ProjectReference Include="..\System.Windows.Forms\System.Windows.Forms.csproj" />
+    <ProjectReference Include="..\..\LiveSplitNative.ComponentHost\LiveSplitNative.ComponentHost.csproj" Private="false" />
+  </ItemGroup>
+</Project>

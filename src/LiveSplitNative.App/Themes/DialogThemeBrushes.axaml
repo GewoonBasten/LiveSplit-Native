@@ -1,0 +1,174 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--
+    Semantic settings/dialog chrome brushes (Light + Dark).
+    Appearance ThemeVariant must drive both background and foreground — never hardcode
+    light-only faces while inheriting Dark text (invisible labels).
+    Timer / .lsl layout colors are unrelated and must not use these keys.
+  -->
+  <ResourceDictionary.ThemeDictionaries>
+    <!-- Default + Light: classic LiveSplit dialog faces -->
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="LsDialogWindowBackground" Color="#FFECECEC"/>
+      <SolidColorBrush x:Key="LsDialogPanelBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogTabBackground" Color="#FFE8E8E8"/>
+      <SolidColorBrush x:Key="LsDialogForeground" Color="#FF000000"/>
+      <SolidColorBrush x:Key="LsDialogSecondaryForeground" Color="#FF1C1C1E"/>
+      <SolidColorBrush x:Key="LsDialogMutedForeground" Color="#FF8E8E93"/>
+      <SolidColorBrush x:Key="LsDialogBorderBrush" Color="#FFA0A0A0"/>
+      <SolidColorBrush x:Key="LsDialogBorderSoftBrush" Color="#FFADADAD"/>
+      <SolidColorBrush x:Key="LsDialogBorderLightBrush" Color="#FFC0C0C0"/>
+      <SolidColorBrush x:Key="LsDialogButtonBackground" Color="#FFE1E1E1"/>
+      <SolidColorBrush x:Key="LsDialogButtonHoverBackground" Color="#FFE5F1FB"/>
+      <SolidColorBrush x:Key="LsDialogButtonHoverBorderBrush" Color="#FF0078D7"/>
+      <SolidColorBrush x:Key="LsDialogButtonPressedBackground" Color="#FFCCE4F7"/>
+      <SolidColorBrush x:Key="LsDialogGroupBoxBackground" Color="#FFF8F8F8"/>
+      <SolidColorBrush x:Key="LsDialogGroupBoxNestedBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogChromeStripBackground" Color="#FFE4E4E4"/>
+      <SolidColorBrush x:Key="LsDialogChromeStripBorderBrush" Color="#FFB0B0B0"/>
+      <SolidColorBrush x:Key="LsDialogListHoverBackground" Color="#FFE5F1FB"/>
+      <SolidColorBrush x:Key="LsDialogListSeparatorBrush" Color="#FFD8D8D8"/>
+      <SolidColorBrush x:Key="LsDialogDisabledBackground" Color="#FFF0F0F0"/>
+      <SolidColorBrush x:Key="LsDialogAccentBrush" Color="#FF0078D7"/>
+      <SolidColorBrush x:Key="LsDialogAccentAltBrush" Color="#FF007AFF"/>
+      <SolidColorBrush x:Key="LsDialogAccentPressedBrush" Color="#FF006CBE"/>
+      <SolidColorBrush x:Key="LsDialogOnAccentForeground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerGlyphBrush" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerHoverBackground" Color="#FFE8E8E8"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerPressedBackground" Color="#FFD8D8D8"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerSeparatorBrush" Color="#FFD0D0D0"/>
+      <SolidColorBrush x:Key="LsDialogHeaderBackground" Color="#FFE8E8ED"/>
+      <SolidColorBrush x:Key="LsDialogHeaderForeground" Color="#FF1C1C1E"/>
+      <SolidColorBrush x:Key="LsDialogHeaderBorderBrush" Color="#FFD1D1D6"/>
+      <SolidColorBrush x:Key="LsDialogColorTabBorderBrush" Color="#FFC8C8C8"/>
+      <SolidColorBrush x:Key="LsDialogColorTabSelectedBackground" Color="#FFF5F5F5"/>
+      <SolidColorBrush x:Key="LsDialogColorTabHoverBackground" Color="#FFFAFAFA"/>
+      <SolidColorBrush x:Key="LsDialogColorTabSelectedBorderBrush" Color="#FF606060"/>
+      <SolidColorBrush x:Key="LsDialogColorTabHoverBorderBrush" Color="#FF8A8A8A"/>
+      <SolidColorBrush x:Key="LsDialogLayoutToolBackground" Color="#FFE8E8E8"/>
+      <SolidColorBrush x:Key="LsDialogMenuBackground" Color="#FFF0F0F0"/>
+      <SolidColorBrush x:Key="LsDialogIconWellBackground" Color="#FFE6E6E6"/>
+      <SolidColorBrush x:Key="LsDialogErrorForeground" Color="#FFAA0000"/>
+      <!-- The settings look (27 Oct sketch): cards, row hairlines, hints, segmented tabs, footer. -->
+      <SolidColorBrush x:Key="LsDialogCardBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogCardBorderBrush" Color="#FFD9D9DC"/>
+      <SolidColorBrush x:Key="LsDialogRowSeparatorBrush" Color="#FFECECEE"/>
+      <SolidColorBrush x:Key="LsDialogHintForeground" Color="#FF6E6E73"/>
+      <SolidColorBrush x:Key="LsDialogSegmentBackground" Color="#FFDCDCDF"/>
+      <SolidColorBrush x:Key="LsDialogSegmentSelectedBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogFooterBorderBrush" Color="#FFD4D4D7"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryBackground" Color="#FF007AFF"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryHoverBackground" Color="#FF1A88FF"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryPressedBackground" Color="#FF0062CC"/>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="LsDialogWindowBackground" Color="#FFECECEC"/>
+      <SolidColorBrush x:Key="LsDialogPanelBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogTabBackground" Color="#FFE8E8E8"/>
+      <SolidColorBrush x:Key="LsDialogForeground" Color="#FF000000"/>
+      <SolidColorBrush x:Key="LsDialogSecondaryForeground" Color="#FF1C1C1E"/>
+      <SolidColorBrush x:Key="LsDialogMutedForeground" Color="#FF8E8E93"/>
+      <SolidColorBrush x:Key="LsDialogBorderBrush" Color="#FFA0A0A0"/>
+      <SolidColorBrush x:Key="LsDialogBorderSoftBrush" Color="#FFADADAD"/>
+      <SolidColorBrush x:Key="LsDialogBorderLightBrush" Color="#FFC0C0C0"/>
+      <SolidColorBrush x:Key="LsDialogButtonBackground" Color="#FFE1E1E1"/>
+      <SolidColorBrush x:Key="LsDialogButtonHoverBackground" Color="#FFE5F1FB"/>
+      <SolidColorBrush x:Key="LsDialogButtonHoverBorderBrush" Color="#FF0078D7"/>
+      <SolidColorBrush x:Key="LsDialogButtonPressedBackground" Color="#FFCCE4F7"/>
+      <SolidColorBrush x:Key="LsDialogGroupBoxBackground" Color="#FFF8F8F8"/>
+      <SolidColorBrush x:Key="LsDialogGroupBoxNestedBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogChromeStripBackground" Color="#FFE4E4E4"/>
+      <SolidColorBrush x:Key="LsDialogChromeStripBorderBrush" Color="#FFB0B0B0"/>
+      <SolidColorBrush x:Key="LsDialogListHoverBackground" Color="#FFE5F1FB"/>
+      <SolidColorBrush x:Key="LsDialogListSeparatorBrush" Color="#FFD8D8D8"/>
+      <SolidColorBrush x:Key="LsDialogDisabledBackground" Color="#FFF0F0F0"/>
+      <SolidColorBrush x:Key="LsDialogAccentBrush" Color="#FF0078D7"/>
+      <SolidColorBrush x:Key="LsDialogAccentAltBrush" Color="#FF007AFF"/>
+      <SolidColorBrush x:Key="LsDialogAccentPressedBrush" Color="#FF006CBE"/>
+      <SolidColorBrush x:Key="LsDialogOnAccentForeground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerGlyphBrush" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerHoverBackground" Color="#FFE8E8E8"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerPressedBackground" Color="#FFD8D8D8"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerSeparatorBrush" Color="#FFD0D0D0"/>
+      <SolidColorBrush x:Key="LsDialogHeaderBackground" Color="#FFE8E8ED"/>
+      <SolidColorBrush x:Key="LsDialogHeaderForeground" Color="#FF1C1C1E"/>
+      <SolidColorBrush x:Key="LsDialogHeaderBorderBrush" Color="#FFD1D1D6"/>
+      <SolidColorBrush x:Key="LsDialogColorTabBorderBrush" Color="#FFC8C8C8"/>
+      <SolidColorBrush x:Key="LsDialogColorTabSelectedBackground" Color="#FFF5F5F5"/>
+      <SolidColorBrush x:Key="LsDialogColorTabHoverBackground" Color="#FFFAFAFA"/>
+      <SolidColorBrush x:Key="LsDialogColorTabSelectedBorderBrush" Color="#FF606060"/>
+      <SolidColorBrush x:Key="LsDialogColorTabHoverBorderBrush" Color="#FF8A8A8A"/>
+      <SolidColorBrush x:Key="LsDialogLayoutToolBackground" Color="#FFE8E8E8"/>
+      <SolidColorBrush x:Key="LsDialogMenuBackground" Color="#FFF0F0F0"/>
+      <SolidColorBrush x:Key="LsDialogIconWellBackground" Color="#FFE6E6E6"/>
+      <SolidColorBrush x:Key="LsDialogErrorForeground" Color="#FFAA0000"/>
+      <!-- The settings look (27 Oct sketch): cards, row hairlines, hints, segmented tabs, footer. -->
+      <SolidColorBrush x:Key="LsDialogCardBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogCardBorderBrush" Color="#FFD9D9DC"/>
+      <SolidColorBrush x:Key="LsDialogRowSeparatorBrush" Color="#FFECECEE"/>
+      <SolidColorBrush x:Key="LsDialogHintForeground" Color="#FF6E6E73"/>
+      <SolidColorBrush x:Key="LsDialogSegmentBackground" Color="#FFDCDCDF"/>
+      <SolidColorBrush x:Key="LsDialogSegmentSelectedBackground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogFooterBorderBrush" Color="#FFD4D4D7"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryBackground" Color="#FF007AFF"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryHoverBackground" Color="#FF1A88FF"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryPressedBackground" Color="#FF0062CC"/>
+    </ResourceDictionary>
+
+    <!-- Dark: readable panel + text (NSAppearance/chrome already dark) -->
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="LsDialogWindowBackground" Color="#FF1C1C1E"/>
+      <SolidColorBrush x:Key="LsDialogPanelBackground" Color="#FF2C2C2E"/>
+      <SolidColorBrush x:Key="LsDialogTabBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogForeground" Color="#FFF5F5F7"/>
+      <SolidColorBrush x:Key="LsDialogSecondaryForeground" Color="#FFE5E5EA"/>
+      <SolidColorBrush x:Key="LsDialogMutedForeground" Color="#FF8E8E93"/>
+      <SolidColorBrush x:Key="LsDialogBorderBrush" Color="#FF636366"/>
+      <SolidColorBrush x:Key="LsDialogBorderSoftBrush" Color="#FF636366"/>
+      <SolidColorBrush x:Key="LsDialogBorderLightBrush" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogButtonBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogButtonHoverBackground" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogButtonHoverBorderBrush" Color="#FF0A84FF"/>
+      <SolidColorBrush x:Key="LsDialogButtonPressedBackground" Color="#FF545456"/>
+      <SolidColorBrush x:Key="LsDialogGroupBoxBackground" Color="#FF2C2C2E"/>
+      <SolidColorBrush x:Key="LsDialogGroupBoxNestedBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogChromeStripBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogChromeStripBorderBrush" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogListHoverBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogListSeparatorBrush" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogDisabledBackground" Color="#FF2C2C2E"/>
+      <SolidColorBrush x:Key="LsDialogAccentBrush" Color="#FF0A84FF"/>
+      <SolidColorBrush x:Key="LsDialogAccentAltBrush" Color="#FF0A84FF"/>
+      <SolidColorBrush x:Key="LsDialogAccentPressedBrush" Color="#FF0060DF"/>
+      <SolidColorBrush x:Key="LsDialogOnAccentForeground" Color="#FFFFFFFF"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerGlyphBrush" Color="#FFE5E5EA"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerHoverBackground" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerPressedBackground" Color="#FF545456"/>
+      <SolidColorBrush x:Key="LsDialogSpinnerSeparatorBrush" Color="#FF636366"/>
+      <SolidColorBrush x:Key="LsDialogHeaderBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogHeaderForeground" Color="#FFF5F5F7"/>
+      <SolidColorBrush x:Key="LsDialogHeaderBorderBrush" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogColorTabBorderBrush" Color="#FF636366"/>
+      <SolidColorBrush x:Key="LsDialogColorTabSelectedBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogColorTabHoverBackground" Color="#FF48484A"/>
+      <SolidColorBrush x:Key="LsDialogColorTabSelectedBorderBrush" Color="#FFAEAEB2"/>
+      <SolidColorBrush x:Key="LsDialogColorTabHoverBorderBrush" Color="#FF8E8E93"/>
+      <SolidColorBrush x:Key="LsDialogLayoutToolBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogMenuBackground" Color="#FF2C2C2E"/>
+      <SolidColorBrush x:Key="LsDialogIconWellBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogErrorForeground" Color="#FFFF6961"/>
+      <!-- The settings look (27 Oct sketch): cards, row hairlines, hints, segmented tabs, footer. -->
+      <SolidColorBrush x:Key="LsDialogCardBackground" Color="#FF2C2C2E"/>
+      <SolidColorBrush x:Key="LsDialogCardBorderBrush" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogRowSeparatorBrush" Color="#FF38383A"/>
+      <SolidColorBrush x:Key="LsDialogHintForeground" Color="#FF98989D"/>
+      <SolidColorBrush x:Key="LsDialogSegmentBackground" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogSegmentSelectedBackground" Color="#FF636366"/>
+      <SolidColorBrush x:Key="LsDialogFooterBorderBrush" Color="#FF3A3A3C"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryBackground" Color="#FF0A84FF"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryHoverBackground" Color="#FF2E95FF"/>
+      <SolidColorBrush x:Key="LsDialogPrimaryPressedBackground" Color="#FF0060DF"/>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

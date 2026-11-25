@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LiveSplitNative.App.RaceProvidersWindow"
+        Title="Manage Racing Services"
+        Width="480"
+        Height="290"
+        MinWidth="460"
+        MinHeight="250"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        FontSize="12"
+        FontFamily="SF Pro Text, Segoe UI, fonts:Inter#Inter, sans-serif">
+  <!--
+    Port of LiveSplit.View RaceProviderManagingDialog: the services checked when enabled on the
+    left (150 wide, all rows); on the right the selected one's Website / Rules links (40 high),
+    its settings, and OK / Cancel (32 high).
+  -->
+  <Grid ColumnDefinitions="174,*" RowDefinitions="52,*,Auto">
+    <Border Grid.RowSpan="2" Margin="24,16,8,12"
+            BorderBrush="{DynamicResource LsDialogCardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            ClipToBounds="True"
+            Background="{DynamicResource LsDialogCardBackground}">
+      <ListBox x:Name="ProviderList"
+               Background="Transparent"
+               BorderThickness="0"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+               ItemContainerTheme="{StaticResource LightDialogListBoxItemTheme}"/>
+    </Border>
+
+    <Grid Grid.Column="1" Margin="8,12,24,0" ColumnDefinitions="Auto,*" RowDefinitions="*,*">
+      <TextBlock x:Name="WebsiteTextLabel" Text="Website:" IsVisible="False"
+                 HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0"/>
+      <TextBlock x:Name="RulesTextLabel" Grid.Row="1" Text="Rules:" IsVisible="False"
+                 HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0"/>
+      <HyperlinkButton x:Name="WebsiteLink" Grid.Column="1" Padding="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Click="OnLinkClicked"/>
+      <HyperlinkButton x:Name="RulesLink" Grid.Row="1" Grid.Column="1" Padding="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Click="OnLinkClicked"/>
+    </Grid>
+
+    <Panel x:Name="SettingsPanel" Grid.Row="1" Grid.Column="1" Margin="8,4,24,12"/>
+
+    <Border Grid.Row="2" Grid.ColumnSpan="2" Classes="dialogFooter">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+        <Button Classes="dialog" Content="Cancel" IsCancel="True" Click="OnCancel"/>
+        <Button x:Name="OkButton" Classes="dialog primary" Content="OK" IsDefault="True" Click="OnOk"/>
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>LiveSplitNative.ComponentHost</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LiveSplitNative.Core\LiveSplitNative.Core.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,50 @@
+using System.Xml;
+
+namespace LiveSplitNative.Core.UI;
+
+/// <summary>LiveSplit.TotalPlaytime TotalPlaytimeSettings (settings version 1.6).</summary>
+public sealed class TotalPlaytimeComponentSettings : IInfoComponentSettings
+{
+    public ArgbColor TextColor { get; set; } = ArgbColor.FromArgb(255, 255, 255, 255);
+    public bool OverrideTextColor { get; set; }
+    public ArgbColor TimeColor { get; set; } = ArgbColor.FromArgb(255, 255, 255, 255);
+    public bool OverrideTimeColor { get; set; }
+    public ArgbColor BackgroundColor { get; set; } = ArgbColor.FromArgb(0, 0, 0, 0);
+    public ArgbColor BackgroundColor2 { get; set; } = ArgbColor.FromArgb(0, 0, 0, 0);
+    public string BackgroundGradient { get; set; } = "Plain";
+    public bool Display2Rows { get; set; }
+
+    /// <summary>"Show Total Hours": 50:12:03 instead of 2d 2:12:03.</summary>
+    public bool ShowTotalHours { get; set; }
+
+    public static TotalPlaytimeComponentSettings FromInnerXml(string? innerXml)
+    {
+        XmlElement root = ComponentSettingsXml.LoadRoot(innerXml);
+        return new TotalPlaytimeComponentSettings
+        {
+            TextColor = ComponentSettingsXml.Color(root, "TextColor", ArgbColor.FromArgb(255, 255, 255, 255)),
+            OverrideTextColor = ComponentSettingsXml.Bool(root, "OverrideTextColor", false),
+            TimeColor = ComponentSettingsXml.Color(root, "TimeColor", ArgbColor.FromArgb(255, 255, 255, 255)),
+            OverrideTimeColor = ComponentSettingsXml.Bool(root, "OverrideTimeColor", false),
+            BackgroundColor = ComponentSettingsXml.Color(root, "BackgroundColor", ArgbColor.FromArgb(0, 0, 0, 0)),
+            BackgroundColor2 = ComponentSettingsXml.Color(root, "BackgroundColor2", ArgbColor.FromArgb(0, 0, 0, 0)),
+            BackgroundGradient = ComponentSettingsXml.String(root, "BackgroundGradient", "Plain"),
+            Display2Rows = ComponentSettingsXml.Bool(root, "Display2Rows", false),
+            ShowTotalHours = ComponentSettingsXml.Bool(root, "ShowTotalHours", false),
+        };
+    }
+
+    public string ToInnerXml() => ComponentSettingsXml.ToInnerXml((doc, parent) =>
+    {
+        ComponentSettingsXml.SetText(doc, parent, "Version", "1.6");
+        ComponentSettingsXml.SetText(doc, parent, "TextColor", TextColor.ToHex());
+        ComponentSettingsXml.SetText(doc, parent, "OverrideTextColor", OverrideTextColor.ToString());
+        ComponentSettingsXml.SetText(doc, parent, "TimeColor", TimeColor.ToHex());
+        ComponentSettingsXml.SetText(doc, parent, "OverrideTimeColor", OverrideTimeColor.ToString());
+        ComponentSettingsXml.SetText(doc, parent, "BackgroundColor", BackgroundColor.ToHex());
+        ComponentSettingsXml.SetText(doc, parent, "BackgroundColor2", BackgroundColor2.ToHex());
+        ComponentSettingsXml.SetText(doc, parent, "BackgroundGradient", BackgroundGradient);
+        ComponentSettingsXml.SetText(doc, parent, "Display2Rows", Display2Rows.ToString());
+        ComponentSettingsXml.SetText(doc, parent, "ShowTotalHours", ShowTotalHours.ToString());
+    });
+}
