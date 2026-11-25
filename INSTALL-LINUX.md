@@ -11,6 +11,8 @@ Fedora, Arch, Mint...). If it says it cannot find ICU, install your distribution
 
 1. Unpack `LiveSplit-Native-linux-x64.tar.gz` (double-click it, or `tar -xzf` it in a terminal).
 2. In a terminal, in the unpacked `linux-x64` folder: `./LiveSplitNative.App`
+3. Optional: `./install.sh` adds LiveSplit with its icon to your app menu (and the dock or
+   taskbar). Run it again if you move the folder; `./install.sh --remove` takes it out.
 
 Right-click the timer for the menu: open splits (`.lss`) and layouts (`.lsl`) from Windows
 LiveSplit as they are.

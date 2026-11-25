@@ -35,6 +35,8 @@ if [ ! -f "$out/compat/LiveSplit.Core.dll" ]; then
 fi
 chmod +x "$out/LiveSplitNative.App"
 cp INSTALL-LINUX.md "$out/INSTALL-LINUX.md"
+cp tools/linux/install.sh "$out/install.sh"
+chmod +x "$out/install.sh"
 # The release's version: the app's update check compares it with GitHub's newest release.
 echo "$version" > "$out/version.txt"
 

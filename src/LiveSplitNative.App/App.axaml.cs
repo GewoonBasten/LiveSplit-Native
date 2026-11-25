@@ -18,6 +18,13 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // Linux: every window shows the app icon (taskbar, Alt-Tab). macOS takes it from the .app.
+        string icon = Path.Combine(AppContext.BaseDirectory, "livesplit.png");
+        if (OperatingSystem.IsLinux() && File.Exists(icon))
+        {
+            Window.IconProperty.OverrideDefaultValue<Window>(new WindowIcon(icon));
+        }
+
         // Every window (timer, settings, dialogs) draws its colors as sRGB.
         Window.WindowOpenedEvent.AddClassHandler<Window>((window, _) =>
         {

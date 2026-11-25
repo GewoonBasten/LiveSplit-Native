@@ -29,6 +29,10 @@
   <ItemGroup Condition="Exists('..\..\native\osx-arm64\libasr_capi.dylib') And ('$(RuntimeIdentifier)' == '' Or $(RuntimeIdentifier.StartsWith('osx')))">
     <None Include="..\..\native\osx-arm64\libasr_capi.dylib" Link="libasr_capi.dylib" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- Linux: the app icon for the windows and the desktop entry (tools/linux/install.sh). -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == '' Or $(RuntimeIdentifier.StartsWith('linux'))">
+    <None Include="..\..\tools\linux\livesplit.png" Link="livesplit.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\tests\fixtures\icons\*.png" Link="fixtures\icons\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
