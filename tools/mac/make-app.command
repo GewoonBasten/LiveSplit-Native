@@ -18,7 +18,10 @@ arch="$(uname -m)"
 rid="osx-$arch"
 [ "$arch" = "x86_64" ] && rid="osx-x64"
 publish="publish/$rid"
-app="dist/LiveSplit.app"
+# Assembled and signed in publish/, then copied to dist/: once the app was opened from dist/,
+# macOS keeps attributes on that folder that codesign refuses ("detritus not allowed").
+app="publish/LiveSplit.app"
+final="dist/LiveSplit.app"
 # (Before 2 Nov 2026 the app was "LiveSplit Native.app"; an old one in dist goes.)
 rm -rf "dist/LiveSplit Native.app"
 
@@ -75,6 +78,11 @@ else
   codesign --force --deep -s - "$app" || exit 1
 fi
 codesign --verify --deep "$app" && echo "signature ok"
+mkdir -p dist
+rm -rf "$final"
+ditto "$app" "$final"
+codesign --verify --deep "$final" || exit 1
+app="$final"
 
 echo "== zip"
 zip="dist/LiveSplit-Native-$arch.zip"
