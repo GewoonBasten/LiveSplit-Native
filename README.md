@@ -5,8 +5,6 @@ and **Linux**, in .NET 10 with [Avalonia](https://avaloniaui.net/). It keeps Liv
 behavior: the timing code, `.lss` / `.lsl` / `settings.cfg` files, menus, dialogs and components
 work as on Windows, and many Windows component DLLs load unchanged.
 
-What works and what is left: [ROADMAP.md](ROADMAP.md).
-
 ## How it is put together
 
 | Folder | What it is |
